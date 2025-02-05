@@ -83,7 +83,7 @@ const IconBox = styled("div")(({ theme }) => ({
 const Layout1Topbar = () => {
   const theme = useTheme();
   const { settings, updateSettings } = useSettings();
-  const { logout, user } = useAuth();
+  const { logout, user } = useAuth(); // call function logout, and data user from JWTAuthContext.jsx
   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const updateSidebarMode = (sidebarSettings) => {
@@ -137,12 +137,13 @@ const Layout1Topbar = () => {
             menuButton={
               <UserMenu>
                 <Span>
-                  Hi <strong>{user.name}</strong>
+                  Hi <strong>{user.nama_lengkap}</strong>
                 </Span>
 
-                <Avatar src={user.avatar} sx={{ cursor: "pointer" }} />
+                <Avatar sx={{ cursor: "pointer" }} />
               </UserMenu>
-            }>
+            }
+          >
             <StyledItem>
               <Link to="/">
                 <Home />

@@ -10,22 +10,26 @@ const initialState = {
   isAuthenticated: false
 };
 
+// check token valid
 const isValidToken = (accessToken) => {
   if (!accessToken) return false;
-  const decodedToken = jwtDecode(accessToken);
-
-  // const currentTime = Date.now() / 1000;
-  // return decodedToken.exp > currentTime;
-
-  return decodedToken?.id ? true : false;
+  try {
+    const decodedToken = jwtDecode(accessToken);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp > currentTime; // valid if token not expired
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
 
+// save token and delete token
 const setSession = (accessToken) => {
   if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("accessToken", accessToken); //set token to local storage
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("accessToken"); // remove token from local storage
     delete axios.defaults.headers.common.Authorization;
   }
 };
@@ -61,14 +65,23 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const login = async (email, password) => {
-    const { data } = await axios.post("/api/auth/login", { email, password });
-    const { accessToken, user } = data;
+  // function login
+  const login = async (username, password) => {
+    const { data } = await axios.post("http://192.168.10.167:8089/api/login", {
+      username,
+      password
+    }); // excecute api login and get data
+    const { authentication } = data; // get data authentication from data
 
-    setSession(accessToken);
-    dispatch({ type: "LOGIN", payload: { user } });
+    setSession(authentication.token); // set token from authentication to setSession
+
+    const dataUser = await axios.get("http://192.168.10.167:8089/api/getpegawai"); // get data user from data
+    const user = dataUser.data;
+
+    dispatch({ type: "LOGIN", payload: { user } }); //send data user to reducer type login
   };
 
+  //function register
   const register = async (email, username, password) => {
     const { data } = await axios.post("/api/auth/register", { email, username, password });
     const { accessToken, user } = data;
@@ -85,12 +98,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       try {
-        const accessToken = window.localStorage.getItem("accessToken");
-
+        const accessToken = window.localStorage.getItem("accessToken"); // get token from local storage
+        //check token valid
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await axios.get("/api/auth/profile");
-          const { user } = response.data;
+          const response = await axios.get("http://192.168.10.167:8089/api/getpegawai"); //get data user login
+          const user = response.data;
 
           dispatch({
             type: "INIT",
