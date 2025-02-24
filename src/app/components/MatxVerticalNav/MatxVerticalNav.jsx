@@ -136,7 +136,7 @@ export default function MatxVerticalNav({ items }) {
             >
               <ButtonBase key={item.name} name="child" sx={{ width: "100%" }}>
                 {item?.icon ? (
-                  <Icon className="icon" sx={{ width: 36 }}>
+                  <Icon className="icon" sx={{ width: 0 }}>
                     {item.icon}
                   </Icon>
                 ) : (
@@ -157,7 +157,7 @@ export default function MatxVerticalNav({ items }) {
                     </Box>
                   </Fragment>
                 )}
-                <StyledText mode={mode} className="sidenavHoverShow">
+                <StyledText mode={mode} className="sidenavHoverShow" sx={{ width: "1rem" }}>
                   {item.name}
                 </StyledText>
 
