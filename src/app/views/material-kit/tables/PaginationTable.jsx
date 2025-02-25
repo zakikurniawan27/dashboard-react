@@ -16,22 +16,24 @@ import {
 const StyledTable = styled(Table)(() => ({
   whiteSpace: "pre",
   "& thead": {
-    "& tr": { "& th": { paddingLeft: 0, paddingRight: 0 } }
+    "& tr": { "& th": { paddingLeft: 15, paddingRight: 15 } }
   },
   "& tbody": {
-    "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } }
+    "& tr": { "& td": { paddingLeft: 15, paddingRight: 15, textTransform: "capitalize" } }
   }
 }));
 
 const subscribarList = [
   {
+    id: 1,
     name: "john doe",
     date: "18 january, 2019",
     amount: 1000,
-    status: "close",
+    status: "Surat Izin Operasional",
     company: "ABC Fintech LTD."
   },
   {
+    id: 1,
     name: "kessy bryan",
     date: "10 january, 2019",
     amount: 9000,
@@ -39,6 +41,7 @@ const subscribarList = [
     company: "My Fintech LTD."
   },
   {
+    id: 1,
     name: "kessy bryan",
     date: "10 january, 2019",
     amount: 9000,
@@ -46,6 +49,7 @@ const subscribarList = [
     company: "My Fintech LTD."
   },
   {
+    id: 1,
     name: "james cassegne",
     date: "8 january, 2019",
     amount: 5000,
@@ -53,6 +57,7 @@ const subscribarList = [
     company: "Collboy Tech LTD."
   },
   {
+    id: 1,
     name: "lucy brown",
     date: "1 january, 2019",
     amount: 89000,
@@ -60,6 +65,7 @@ const subscribarList = [
     company: "ABC Fintech LTD."
   },
   {
+    id: 1,
     name: "lucy brown",
     date: "1 january, 2019",
     amount: 89000,
@@ -67,6 +73,7 @@ const subscribarList = [
     company: "ABC Fintech LTD."
   },
   {
+    id: 1,
     name: "lucy brown",
     date: "1 january, 2019",
     amount: 89000,
@@ -74,6 +81,7 @@ const subscribarList = [
     company: "ABC Fintech LTD."
   },
   {
+    id: 1,
     name: "lucy brown",
     date: "1 january, 2019",
     amount: 89000,
@@ -81,6 +89,7 @@ const subscribarList = [
     company: "ABC Fintech LTD."
   },
   {
+    id: 1,
     name: "lucy brown",
     date: "1 january, 2019",
     amount: 89000,
@@ -89,7 +98,7 @@ const subscribarList = [
   }
 ];
 
-export default function PaginationTable() {
+export default function PaginationTable({ children }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -106,21 +115,15 @@ export default function PaginationTable() {
     <Box width="100%" overflow="auto">
       <StyledTable>
         <TableHead>
-          <TableRow>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="center">Company</TableCell>
-            <TableCell align="center">Start Date</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Amount</TableCell>
-            <TableCell align="right">Action</TableCell>
-          </TableRow>
+          <TableRow>{children}</TableRow>
         </TableHead>
         <TableBody>
           {subscribarList
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((subscriber, index) => (
               <TableRow key={index}>
-                <TableCell align="left">{subscriber.name}</TableCell>
+                <TableCell align="left">{subscriber.id}</TableCell>
+                <TableCell align="center">{subscriber.name}</TableCell>
                 <TableCell align="center">{subscriber.company}</TableCell>
                 <TableCell align="center">{subscriber.date}</TableCell>
                 <TableCell align="center">{subscriber.status}</TableCell>
