@@ -71,9 +71,9 @@ export const AuthProvider = ({ children }) => {
       username,
       password
     }); // excecute api login and get data
-    const { authentication } = data; // get data authentication from data
+    const { token } = data; // get data authentication from data
 
-    setSession(authentication.token); // set token from authentication to setSession
+    setSession(token); // set token from authentication to setSession
 
     const dataUser = await axios.get("http://192.168.10.167:8089/api/getpegawai"); // get data user from data
     const user = dataUser.data;
