@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,7 @@ import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import ModalContent from "app/components/ModalContent";
 import SelectContent from "app/components/SelectContent";
 import DatepickerContent from "app/components/DatepickerContent";
+import { dokumenKhususService } from "app/service/dokumenKhusus/dokumenKhusus.service";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -77,10 +78,11 @@ const DokumenKhusus = () => {
     "-" +
     String(data.selectedDate.getDate()).padStart(2, "0");
 
+  //state dokumen khusus
+  const [dokumenKhusus, setDokumenKhusus] = useState("");
+
   //state open modal
   const [open, setOpen] = useState(false);
-
-  console.log(data.noDokumen, data.name, data.file, data.selectedOption, todayFormatted);
 
   //function to handle open and close modal
   const handleOpen = () => setOpen(true);
@@ -114,6 +116,20 @@ const DokumenKhusus = () => {
       setData({ ...data, file: e.target.files[0] });
     }
   };
+
+  //function to get data dokumen khusus
+  const getDokumenKhusus = async () => {
+    try {
+      const { data } = await dokumenKhususService();
+      setDokumenKhusus(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getDokumenKhusus();
+  }, []);
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -146,7 +162,7 @@ const DokumenKhusus = () => {
           </Card>
           {/** Begin Table */}
           <Card>
-            <PaginationTable>
+            <PaginationTable data={dokumenKhusus}>
               <TableCell align="left">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>
               <TableCell align="center">No Dokumen</TableCell>

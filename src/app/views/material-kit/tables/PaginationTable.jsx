@@ -23,82 +23,8 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
-const subscribarList = [
-  {
-    id: 1,
-    name: "john doe",
-    date: "18 january, 2019",
-    amount: 1000,
-    status: "Surat Izin Operasional",
-    company: "ABC Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "kessy bryan",
-    date: "10 january, 2019",
-    amount: 9000,
-    status: "open",
-    company: "My Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "kessy bryan",
-    date: "10 january, 2019",
-    amount: 9000,
-    status: "open",
-    company: "My Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "james cassegne",
-    date: "8 january, 2019",
-    amount: 5000,
-    status: "close",
-    company: "Collboy Tech LTD."
-  },
-  {
-    id: 1,
-    name: "lucy brown",
-    date: "1 january, 2019",
-    amount: 89000,
-    status: "open",
-    company: "ABC Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "lucy brown",
-    date: "1 january, 2019",
-    amount: 89000,
-    status: "open",
-    company: "ABC Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "lucy brown",
-    date: "1 january, 2019",
-    amount: 89000,
-    status: "open",
-    company: "ABC Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "lucy brown",
-    date: "1 january, 2019",
-    amount: 89000,
-    status: "open",
-    company: "ABC Fintech LTD."
-  },
-  {
-    id: 1,
-    name: "lucy brown",
-    date: "1 january, 2019",
-    amount: 89000,
-    status: "open",
-    company: "ABC Fintech LTD."
-  }
-];
-
-export default function PaginationTable({ children }) {
+export default function PaginationTable({ children, data }) {
+  let nomor = 1;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -118,19 +44,21 @@ export default function PaginationTable({ children }) {
           <TableRow>{children}</TableRow>
         </TableHead>
         <TableBody>
-          {subscribarList
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((subscriber, index) => (
+          {data.data
+            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item, index) => (
               <TableRow key={index}>
-                <TableCell align="left">{subscriber.id}</TableCell>
-                <TableCell align="center">{subscriber.name}</TableCell>
-                <TableCell align="center">{subscriber.company}</TableCell>
-                <TableCell align="center">{subscriber.date}</TableCell>
-                <TableCell align="center">{subscriber.status}</TableCell>
-                <TableCell align="center">${subscriber.amount}</TableCell>
+                <TableCell align="left">{nomor++}</TableCell>
+                <TableCell align="center">{item.jenis_dokumen}</TableCell>
+                <TableCell align="center">{item.no_dokumen}</TableCell>
+                <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
+                <TableCell align="center">{item.nama_dokumen}</TableCell>
+                <TableCell align="center">{item.tanggal_terbit}</TableCell>
                 <TableCell align="right">
                   <IconButton>
-                    <Icon color="error">close</Icon>
+                    <Icon sx={{ color: "#E3D026" }}>edit</Icon>
+                    <Icon color="primary">download</Icon>
+                    <Icon color="error">delete</Icon>
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -143,7 +71,7 @@ export default function PaginationTable({ children }) {
         page={page}
         component="div"
         rowsPerPage={rowsPerPage}
-        count={subscribarList.length}
+        count={data?.data?.length || 0}
         onPageChange={handleChangePage}
         rowsPerPageOptions={[5, 10, 25]}
         onRowsPerPageChange={handleChangeRowsPerPage}
