@@ -44,25 +44,39 @@ export default function PaginationTable({ children, data }) {
           <TableRow>{children}</TableRow>
         </TableHead>
         <TableBody>
-          {data.data
-            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => (
-              <TableRow key={index}>
-                <TableCell align="left">{nomor(index)}</TableCell>
-                <TableCell align="center">{item.jenis_dokumen}</TableCell>
-                <TableCell align="center">{item.no_dokumen}</TableCell>
-                <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
-                <TableCell align="center">{item.nama_dokumen}</TableCell>
-                <TableCell align="center">{item.tanggal_terbit}</TableCell>
-                <TableCell align="right">
-                  <IconButton>
-                    <Icon sx={{ color: "#E3D026" }}>edit</Icon>
-                    <Icon color="primary">download</Icon>
-                    <Icon color="error">delete</Icon>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+          {data.data?.length > 0 ? (
+            data.data
+              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell align="left">{nomor(index)}</TableCell>
+                  <TableCell align="center">{item.jenis_dokumen}</TableCell>
+                  <TableCell align="center">{item.no_dokumen}</TableCell>
+                  <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
+                  <TableCell align="center">{item.nama_dokumen}</TableCell>
+                  <TableCell align="center">{item.tanggal_terbit}</TableCell>
+                  <TableCell align="right">
+                    <IconButton>
+                      <Icon sx={{ color: "#E3D026" }}>edit</Icon>
+                      <Icon color="primary">download</Icon>
+                      <Icon color="error">delete</Icon>
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+          ) : data.data?.length === 0 ? (
+            <TableRow>
+              <TableCell align="left"></TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center">Data Kosong</TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="right"></TableCell>
+            </TableRow>
+          ) : (
+            <></>
+          )}
         </TableBody>
       </StyledTable>
 

@@ -1,9 +1,12 @@
 import axios from "axios";
 
-export const dokumenKhususService = async (token) => {
+export const dokumenKhususService = async (token, search) => {
   const data = await axios.get("http://192.168.10.167:8089/library/getDokumenKhusus", {
     headers: {
       Authorization: `Bearer  ${token}`
+    },
+    params: {
+      search: `${search}`
     }
   });
   return data;

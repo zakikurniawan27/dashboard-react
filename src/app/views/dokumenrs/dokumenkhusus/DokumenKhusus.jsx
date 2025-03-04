@@ -62,9 +62,16 @@ const DokumenKhusus = () => {
   //state open modal
   const [open, setOpen] = useState(false);
 
+  //state search
+  const [search, setSearch] = useState("");
+
   //function to handle open modal
   const handleOpen = () => setOpen(true);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+  };
   //function to handle change date
   const handleDateChange = (date) => setData({ ...data, selectedDate: date });
 
@@ -96,7 +103,18 @@ const DokumenKhusus = () => {
   //function to get data dokumen khusus
   const getDokumenKhusus = async () => {
     try {
-      const { data } = await dokumenKhususService(token);
+      const { data } = await dokumenKhususService(token, search);
+      setDokumenKhusus(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //function to search data dokumen khusus
+  const searchDokumenKhusus = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await dokumenKhususService(token, search);
       setDokumenKhusus(data);
     } catch (error) {
       console.log(error);
@@ -150,6 +168,7 @@ const DokumenKhusus = () => {
                 type="text"
                 name="search"
                 placeholder="Cari Dokumen"
+                onChange={handleSearch}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -161,7 +180,7 @@ const DokumenKhusus = () => {
                 }}
                 size="small"
               />
-              <Button variant="outlined" color="ochre">
+              <Button variant="outlined" color="ochre" onClick={searchDokumenKhusus}>
                 <SearchOutlinedIcon color="ochre" />
               </Button>
               <Button variant="outlined" onClick={handleOpen}>
