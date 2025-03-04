@@ -37,6 +37,40 @@ export default function PaginationTable({ children, data }) {
     setPage(0);
   };
 
+  //function handle download pdf
+  const handleDownloadPdf = async (filePath, fileName) => {
+    if (!filePath) {
+      console.error("File path tidak ditemukan");
+      return;
+    }
+
+    const baseUrl = "http://192.168.10.167:8089/library/getDownloadDokumenKhusus/";
+    const fullUrl = `${baseUrl}${filePath}`;
+
+    try {
+      const response = await fetch(fullUrl, { method: "GET" });
+
+      if (!response.ok) {
+        throw new Error(`Gagal mengunduh file: ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName || "dokumen.pdf"; // File Name Document
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Delete URL blob after finish
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengunduh:", error);
+    }
+  };
+
   return (
     <Box width="100%" overflow="auto">
       <StyledTable>
@@ -49,16 +83,53 @@ export default function PaginationTable({ children, data }) {
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell align="left">{nomor(index)}</TableCell>
-                  <TableCell align="center">{item.jenis_dokumen}</TableCell>
-                  <TableCell align="center">{item.no_dokumen}</TableCell>
-                  <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
-                  <TableCell align="center">{item.nama_dokumen}</TableCell>
-                  <TableCell align="center">{item.tanggal_terbit}</TableCell>
+                  <TableCell
+                    align="left"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {nomor(index)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {item.jenis_dokumen}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {item.no_dokumen}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {parseInt(item.tanggal_terbit)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {item.nama_dokumen}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {item.tanggal_terbit}
+                  </TableCell>
                   <TableCell align="right">
                     <IconButton>
                       <Icon sx={{ color: "#E3D026" }}>edit</Icon>
-                      <Icon color="primary">download</Icon>
+                    </IconButton>
+                    <IconButton>
                       <Icon color="error">delete</Icon>
                     </IconButton>
                   </TableCell>
