@@ -6,14 +6,13 @@ import Button from "@mui/material/Button";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
-import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { InputAdornment, TableCell } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import ModalContent from "app/components/ModalContent";
-import SelectContent from "app/components/SelectContent";
-import DatepickerContent from "app/components/DatepickerContent";
-import { dokumenKhususService } from "app/service/dokumenKhusus/dokumenKhusus.service";
+import {
+  dokumenKhususService,
+  postDokumenKhusus
+} from "app/service/dokumenKhusus/dokumenKhusus.service";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -23,29 +22,6 @@ const ContentBox = styled("div")(({ theme }) => ({
   justifyContent: "center",
   [theme.breakpoints.down("sm")]: { margin: "1rem" }
 }));
-
-const BoxButtonModal = styled("div")(() => ({
-  display: "flex",
-  flexDirection: "row",
-  gap: "0.5rem",
-  justifyContent: "end"
-}));
-
-const ContentModal = styled("div")(() => ({
-  borderTop: "1px solid #a0a0a0",
-  borderBottom: "1px solid #a0a0a0",
-  paddingTop: "10px",
-  paddingBottom: "10px ",
-  marginBottom: "10px"
-}));
-
-const jenisDokumen = [
-  { label: "Surat Keputusan Direktur" },
-  { label: "Peraturan Direktur" },
-  { label: "Peraturan Daerah" },
-  { label: "Peraturan Bupati" },
-  { label: "Perjanjian Kerja Sama" }
-];
 
 const theme = createTheme({
   palette: {
@@ -58,6 +34,8 @@ const theme = createTheme({
 });
 
 const DokumenKhusus = () => {
+  //get token from local storage
+  const token = localStorage.getItem("accessToken");
   //state date
   const date = new Date();
 
@@ -70,13 +48,13 @@ const DokumenKhusus = () => {
     selectedDate: date
   });
 
-  //format date
-  const todayFormatted =
-    data.selectedDate.getFullYear() +
-    "-" +
-    String(data.selectedDate.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(data.selectedDate.getDate()).padStart(2, "0");
+  //state open snackbar
+  const [openSnackBar, setOpenSnackBar] = useState({
+    success: false,
+    failed: false,
+    vertical: "bottom",
+    horizontal: "right"
+  });
 
   //state dokumen khusus
   const [dokumenKhusus, setDokumenKhusus] = useState("");
@@ -84,9 +62,8 @@ const DokumenKhusus = () => {
   //state open modal
   const [open, setOpen] = useState(false);
 
-  //function to handle open and close modal
+  //function to handle open modal
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   //function to handle change date
   const handleDateChange = (date) => setData({ ...data, selectedDate: date });
@@ -111,19 +88,51 @@ const DokumenKhusus = () => {
 
   //function to handle file dokumen
   const handleFileDokumen = (e) => {
-    e.preventDefault();
-    if (e.target.files) {
-      setData({ ...data, file: e.target.files[0] });
+    if (e.currentTarget.files) {
+      setData({ ...data, file: e.currentTarget.files[0] });
     }
   };
 
   //function to get data dokumen khusus
   const getDokumenKhusus = async () => {
     try {
-      const { data } = await dokumenKhususService();
+      const { data } = await dokumenKhususService(token);
       setDokumenKhusus(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  //format date
+  const todayFormatted =
+    data.selectedDate.getFullYear() +
+    "-" +
+    String(data.selectedDate.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(data.selectedDate.getDate()).padStart(2, "0");
+
+  //store and manage data entered by users through forms
+  const formData = new FormData();
+  formData.append("jenis_dokumen", data.selectedOption);
+  formData.append("no_dokumen", data.noDokumen);
+  formData.append("tanggal_terbit", todayFormatted);
+  formData.append("nama_dokumen", data.name);
+  formData.append("file_dokumen", data.file);
+
+  //function handle to post data dokumen khusus
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await postDokumenKhusus(formData, token);
+      setOpen(false);
+      setOpenSnackBar({ ...openSnackBar, success: true });
+      console.log("Fetching updated dokumen khusus...");
+      await getDokumenKhusus();
+    } catch (error) {
+      console.log(error);
+      alert(error);
+      setOpen(false);
+      setOpenSnackBar({ ...openSnackBar, failed: true });
     }
   };
 
@@ -162,7 +171,7 @@ const DokumenKhusus = () => {
           </Card>
           {/** Begin Table */}
           <Card>
-            <PaginationTable data={dokumenKhusus}>
+            <PaginationTable key={dokumenKhusus.length} data={dokumenKhusus}>
               <TableCell align="left">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>
               <TableCell align="center">No Dokumen</TableCell>
@@ -175,82 +184,20 @@ const DokumenKhusus = () => {
           {/** End Table */}
         </ContentBox>
         {/** Begin Modal */}
-        <ModalContent open={open}>
-          <h2 style={{ fontWeight: "bold" }}>Dokumen Khusus</h2>
-          <ContentModal>
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>No Dokumen</p>
-              <TextField
-                fullWidth
-                type="text"
-                onChange={handleNoDokumen}
-                id="fullWidth"
-                name="noDokumen"
-                placeholder="No Dokumen"
-                variant="outlined"
-                size="small"
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Jenis Dokumen</p>
-              <SelectContent
-                title="Pilih Jenis Dokumen"
-                option={jenisDokumen}
-                selectedOption={data.selectedOption}
-                handleChange={handleChangeOption}
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Tanggal Terbit</p>
-              <DatepickerContent
-                selectedDate={data.selectedDate}
-                handleDateChange={handleDateChange}
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Nama Dokumen</p>
-              <TextField
-                fullWidth
-                type="text"
-                multiline
-                rows={4}
-                placeholder="Nama Dokumen"
-                onChange={handleNamaDokumen}
-              />
-            </div>
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Upload File</p>
-              <TextField
-                fullWidth
-                type="file"
-                placeholder="Upload File"
-                size="small"
-                onChange={handleFileDokumen}
-              />
-            </div>
-          </ContentModal>
-          <BoxButtonModal>
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              sx={{ fontSize: "13px" }}
-              onClick={handleClose}
-              startIcon={<CloseOutlinedIcon />}
-            >
-              Tutup
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ fontSize: "13px" }}
-              startIcon={<SaveAltOutlinedIcon />}
-              disabled={!data.name || !data.noDokumen || !data.file || !data.selectedOption}
-            >
-              Simpan
-            </Button>
-          </BoxButtonModal>
-        </ModalContent>
+        <ModalContent
+          open={open}
+          data={data}
+          token={token}
+          openSnackBar={openSnackBar}
+          setOpen={setOpen}
+          setOpenSnackBar={setOpenSnackBar}
+          handleChangeOption={handleChangeOption}
+          handleDateChange={handleDateChange}
+          handleFileDokumen={handleFileDokumen}
+          handleNamaDokumen={handleNamaDokumen}
+          handleNoDokumen={handleNoDokumen}
+          handleSubmit={handleSubmit}
+        />
         {/** End Modal */}
       </ThemeProvider>
     </>

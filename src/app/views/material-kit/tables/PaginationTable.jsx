@@ -24,9 +24,9 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 export default function PaginationTable({ children, data }) {
-  let nomor = 1;
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const nomor = (i) => page * rowsPerPage + i + 1;
 
   const handleChangePage = (_, newPage) => {
     setPage(newPage);
@@ -48,7 +48,7 @@ export default function PaginationTable({ children, data }) {
             ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((item, index) => (
               <TableRow key={index}>
-                <TableCell align="left">{nomor++}</TableCell>
+                <TableCell align="left">{nomor(index)}</TableCell>
                 <TableCell align="center">{item.jenis_dokumen}</TableCell>
                 <TableCell align="center">{item.no_dokumen}</TableCell>
                 <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
@@ -73,7 +73,7 @@ export default function PaginationTable({ children, data }) {
         rowsPerPage={rowsPerPage}
         count={data?.data?.length || 0}
         onPageChange={handleChangePage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[10, 20]}
         onRowsPerPageChange={handleChangeRowsPerPage}
         nextIconButtonProps={{ "aria-label": "Next Page" }}
         backIconButtonProps={{ "aria-label": "Previous Page" }}

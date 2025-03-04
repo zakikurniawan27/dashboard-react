@@ -9,8 +9,8 @@ const SelectContent = ({ option, title, handleChange, selectedOption }) => {
           {title}
         </MenuItem>
         {option?.map((item, index) => (
-          <MenuItem key={index} value={item.label}>
-            {item.label}
+          <MenuItem key={index} value={item.id}>
+            {item.deskripsi}
           </MenuItem>
         ))}
       </Select>
