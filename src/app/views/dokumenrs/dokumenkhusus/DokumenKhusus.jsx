@@ -186,14 +186,14 @@ const DokumenKhusus = () => {
           </Card>
           {/** Begin Table */}
           <Card>
-            <PaginationTable key={dokumenKhusus.length} data={dokumenKhusus}>
-              <TableCell align="left">No</TableCell>
+            <PaginationTable key={dokumenKhusus.length} data={dokumenKhusus} token={token}>
+              <TableCell align="center">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>
               <TableCell align="center">No Dokumen</TableCell>
               <TableCell align="center">Tahun</TableCell>
               <TableCell align="center">Nama Dokumen</TableCell>
               <TableCell align="center">Tanggal Terbit</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </PaginationTable>
           </Card>
           {/** End Table */}

@@ -9,7 +9,8 @@ import {
   TableCell,
   TableHead,
   IconButton,
-  TablePagination
+  TablePagination,
+  CircularProgress
 } from "@mui/material";
 
 // STYLED COMPONENT
@@ -19,13 +20,14 @@ const StyledTable = styled(Table)(() => ({
     "& tr": { "& th": { paddingLeft: 15, paddingRight: 15 } }
   },
   "& tbody": {
-    "& tr": { "& td": { paddingLeft: 15, paddingRight: 15, textTransform: "capitalize" } }
+    "& tr": { "& td": { paddingLeft: 15, textTransform: "capitalize" } }
   }
 }));
 
-export default function PaginationTable({ children, data }) {
+export default function PaginationTable({ children, data, token }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
   const nomor = (i) => page * rowsPerPage + i + 1;
 
   const handleChangePage = (_, newPage) => {
@@ -38,7 +40,7 @@ export default function PaginationTable({ children, data }) {
   };
 
   //function handle download pdf
-  const handleDownloadPdf = async (filePath, fileName) => {
+  const handleOpenPdf = async (filePath, accessToken) => {
     if (!filePath) {
       console.error("File path tidak ditemukan");
       return;
@@ -48,26 +50,31 @@ export default function PaginationTable({ children, data }) {
     const fullUrl = `${baseUrl}${filePath}`;
 
     try {
-      const response = await fetch(fullUrl, { method: "GET" });
+      setIsLoading(true);
+      const response = await fetch(fullUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer  ${accessToken}`
+        }
+      });
 
       if (!response.ok) {
-        throw new Error(`Gagal mengunduh file: ${response.statusText}`);
+        throw new Error(`Gagal mengambil file: ${response.statusText}`);
       }
 
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = fileName || "dokumen.pdf"; // File Name Document
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Buka PDF di tab baru
+      window.open(blobUrl, "_blank");
 
-      // Delete URL blob after finish
-      window.URL.revokeObjectURL(blobUrl);
+      // Hapus blob URL setelah beberapa saat untuk menghemat memori
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl);
+      }, 10000); // 10 detik
+      setIsLoading(false);
     } catch (error) {
-      console.error("Terjadi kesalahan saat mengunduh:", error);
+      console.error("Terjadi kesalahan saat membuka PDF:", error);
     }
   };
 
@@ -82,50 +89,18 @@ export default function PaginationTable({ children, data }) {
             data.data
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell
-                    align="left"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {nomor(index)}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {item.jenis_dokumen}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {item.no_dokumen}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {parseInt(item.tanggal_terbit)}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {item.nama_dokumen}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleDownloadPdf(item.id, item.nama_dokumen)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {item.tanggal_terbit}
-                  </TableCell>
-                  <TableCell align="right">
+                <TableRow
+                  key={index}
+                  onClick={() => handleOpenPdf(item.id, token)}
+                  sx={{ cursor: "pointer" }}
+                >
+                  <TableCell align="center">{nomor(index)}</TableCell>
+                  <TableCell align="center">{item.jenis_dokumen}</TableCell>
+                  <TableCell align="center">{item.no_dokumen}</TableCell>
+                  <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
+                  <TableCell align="center">{item.nama_dokumen}</TableCell>
+                  <TableCell align="center">{item.tanggal_terbit}</TableCell>
+                  <TableCell align="center">
                     <IconButton>
                       <Icon sx={{ color: "#E3D026" }}>edit</Icon>
                     </IconButton>
@@ -163,6 +138,20 @@ export default function PaginationTable({ children, data }) {
         nextIconButtonProps={{ "aria-label": "Next Page" }}
         backIconButtonProps={{ "aria-label": "Previous Page" }}
       />
+      {isLoading === true ? (
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          <CircularProgress size={"5rem"} />
+        </Box>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 }
