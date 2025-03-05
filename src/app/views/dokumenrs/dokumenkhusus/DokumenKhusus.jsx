@@ -68,30 +68,18 @@ const DokumenKhusus = () => {
   //function to handle open modal
   const handleOpen = () => setOpen(true);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearch(e.target.value);
-  };
+  const handleSearch = (e) => setSearch(e.target.value);
   //function to handle change date
   const handleDateChange = (date) => setData({ ...data, selectedDate: date });
 
   //function to handle change option select
-  const handleChangeOption = (e) => {
-    e.preventDefault();
-    setData({ ...data, selectedOption: e.target.value });
-  };
+  const handleChangeOption = (e) => setData({ ...data, selectedOption: e.target.value });
 
   //function to handle no dokumen
-  const handleNoDokumen = (e) => {
-    e.preventDefault();
-    setData({ ...data, noDokumen: e.target.value });
-  };
+  const handleNoDokumen = (e) => setData({ ...data, noDokumen: e.target.value });
 
   //function to handle nama dokumen
-  const handleNamaDokumen = (e) => {
-    e.preventDefault();
-    setData({ ...data, name: e.target.value });
-  };
+  const handleNamaDokumen = (e) => setData({ ...data, name: e.target.value });
 
   //function to handle file dokumen
   const handleFileDokumen = (e) => {
@@ -111,13 +99,20 @@ const DokumenKhusus = () => {
   };
 
   //function to search data dokumen khusus
-  const searchDokumenKhusus = async (e) => {
-    e.preventDefault();
+  const searchDokumenKhusus = async () => {
     try {
       const { data } = await dokumenKhususService(token, search);
       setDokumenKhusus(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  //function to handle keypress Enter in keyboard on input search
+  const handleEnterSearch = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      searchDokumenKhusus();
     }
   };
 
@@ -165,6 +160,7 @@ const DokumenKhusus = () => {
             <CardContent style={{ display: "flex", flexDirection: "row", gap: "0.2rem" }}>
               <TextField
                 fullWidth
+                onKeyDown={handleEnterSearch}
                 type="text"
                 name="search"
                 placeholder="Cari Dokumen"
