@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Modal from "@mui/material/Modal";
 import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
@@ -157,6 +157,17 @@ const ModalContent = ({
             >
               Simpan
             </Button>
+            {data.isLoading === true && (
+              <CircularProgress
+                size={70}
+                sx={{
+                  position: "absolute",
+                  top: "60%",
+                  left: "50%",
+                  transform: "translate(-60%, -50%)"
+                }}
+              />
+            )}
           </BoxButtonModal>
         </Box>
       </Modal>

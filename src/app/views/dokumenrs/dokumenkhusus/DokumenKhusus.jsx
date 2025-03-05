@@ -41,6 +41,7 @@ const DokumenKhusus = () => {
 
   //state data dokumen
   const [data, setData] = useState({
+    isLoading: false,
     noDokumen: "",
     name: "",
     file: "",
@@ -136,11 +137,13 @@ const DokumenKhusus = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setData({ ...data, isLoading: true });
       await postDokumenKhusus(formData, token);
-      setOpen(false);
       setOpenSnackBar({ ...openSnackBar, success: true });
       console.log("Fetching updated dokumen khusus...");
       await getDokumenKhusus();
+      setData({ ...data, isLoading: false });
+      setOpen(false);
     } catch (error) {
       console.log(error);
       alert(error);
