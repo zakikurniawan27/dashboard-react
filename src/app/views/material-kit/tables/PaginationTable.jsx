@@ -24,7 +24,7 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
-export default function PaginationTable({ children, data, token }) {
+export default function PaginationTable({ children, data, token, stateData }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,6 +85,17 @@ export default function PaginationTable({ children, data, token }) {
           <TableRow>{children}</TableRow>
         </TableHead>
         <TableBody>
+          {stateData.isLoading === true && (
+            <CircularProgress
+              size={70}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)"
+              }}
+            />
+          )}
           {data.data?.length > 0 ? (
             data.data
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

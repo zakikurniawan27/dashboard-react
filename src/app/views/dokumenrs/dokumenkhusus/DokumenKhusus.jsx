@@ -40,7 +40,7 @@ const DokumenKhusus = () => {
   const date = new Date();
 
   //state data dokumen
-  const [data, setData] = useState({
+  const [stateData, setStateData] = useState({
     isLoading: false,
     noDokumen: "",
     name: "",
@@ -71,29 +71,31 @@ const DokumenKhusus = () => {
 
   const handleSearch = (e) => setSearch(e.target.value);
   //function to handle change date
-  const handleDateChange = (date) => setData({ ...data, selectedDate: date });
+  const handleDateChange = (date) => setStateData({ ...stateData, selectedDate: date });
 
   //function to handle change option select
-  const handleChangeOption = (e) => setData({ ...data, selectedOption: e.target.value });
+  const handleChangeOption = (e) => setStateData({ ...stateData, selectedOption: e.target.value });
 
   //function to handle no dokumen
-  const handleNoDokumen = (e) => setData({ ...data, noDokumen: e.target.value });
+  const handleNoDokumen = (e) => setStateData({ ...stateData, noDokumen: e.target.value });
 
   //function to handle nama dokumen
-  const handleNamaDokumen = (e) => setData({ ...data, name: e.target.value });
+  const handleNamaDokumen = (e) => setStateData({ ...stateData, name: e.target.value });
 
   //function to handle file dokumen
   const handleFileDokumen = (e) => {
     if (e.currentTarget.files) {
-      setData({ ...data, file: e.currentTarget.files[0] });
+      setStateData({ ...stateData, file: e.currentTarget.files[0] });
     }
   };
 
   //function to get data dokumen khusus
   const getDokumenKhusus = async () => {
     try {
+      setStateData({ ...stateData, isLoading: true });
       const { data } = await dokumenKhususService(token, search);
       setDokumenKhusus(data);
+      setStateData({ ...stateData, isLoading: false });
     } catch (error) {
       console.log(error);
     }
@@ -102,8 +104,10 @@ const DokumenKhusus = () => {
   //function to search data dokumen khusus
   const searchDokumenKhusus = async () => {
     try {
+      setStateData({ ...stateData, isLoading: true });
       const { data } = await dokumenKhususService(token, search);
       setDokumenKhusus(data);
+      setStateData({ ...stateData, isLoading: false });
     } catch (error) {
       console.log(error);
     }
@@ -119,30 +123,30 @@ const DokumenKhusus = () => {
 
   //format date
   const todayFormatted =
-    data.selectedDate.getFullYear() +
+    stateData.selectedDate.getFullYear() +
     "-" +
-    String(data.selectedDate.getMonth() + 1).padStart(2, "0") +
+    String(stateData.selectedDate.getMonth() + 1).padStart(2, "0") +
     "-" +
-    String(data.selectedDate.getDate()).padStart(2, "0");
+    String(stateData.selectedDate.getDate()).padStart(2, "0");
 
   //store and manage data entered by users through forms
   const formData = new FormData();
-  formData.append("jenis_dokumen", data.selectedOption);
-  formData.append("no_dokumen", data.noDokumen);
+  formData.append("jenis_dokumen", stateData.selectedOption);
+  formData.append("no_dokumen", stateData.noDokumen);
   formData.append("tanggal_terbit", todayFormatted);
-  formData.append("nama_dokumen", data.name);
-  formData.append("file_dokumen", data.file);
+  formData.append("nama_dokumen", stateData.name);
+  formData.append("file_dokumen", stateData.file);
 
   //function handle to post data dokumen khusus
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setData({ ...data, isLoading: true });
+      setStateData({ ...stateData, isLoading: true });
       await postDokumenKhusus(formData, token);
       setOpenSnackBar({ ...openSnackBar, success: true });
       console.log("Fetching updated dokumen khusus...");
       await getDokumenKhusus();
-      setData({ ...data, isLoading: false });
+      setStateData({ ...stateData, isLoading: false });
       setOpen(false);
     } catch (error) {
       console.log(error);
@@ -189,7 +193,12 @@ const DokumenKhusus = () => {
           </Card>
           {/** Begin Table */}
           <Card>
-            <PaginationTable key={dokumenKhusus.length} data={dokumenKhusus} token={token}>
+            <PaginationTable
+              key={dokumenKhusus.length}
+              stateData={stateData}
+              data={dokumenKhusus}
+              token={token}
+            >
               <TableCell align="center">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>
               <TableCell align="center">No Dokumen</TableCell>
@@ -204,7 +213,7 @@ const DokumenKhusus = () => {
         {/** Begin Modal */}
         <ModalContent
           open={open}
-          data={data}
+          data={stateData}
           token={token}
           openSnackBar={openSnackBar}
           setOpen={setOpen}
