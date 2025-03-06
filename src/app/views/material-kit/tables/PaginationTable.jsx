@@ -80,22 +80,22 @@ export default function PaginationTable({ children, data, token, stateData }) {
 
   return (
     <Box width="100%" overflow="auto">
+      {stateData.isLoading === true && (
+        <CircularProgress
+          size={70}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"
+          }}
+        />
+      )}
       <StyledTable>
         <TableHead>
           <TableRow>{children}</TableRow>
         </TableHead>
         <TableBody>
-          {stateData.isLoading === true && (
-            <CircularProgress
-              size={70}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)"
-              }}
-            />
-          )}
           {data.data?.length > 0 ? (
             data.data
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

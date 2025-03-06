@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
-import { InputAdornment, TableCell } from "@mui/material";
+import { Alert, AlertTitle, InputAdornment, TableCell } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import ModalContent from "app/components/ModalContent";
 import {
@@ -162,6 +162,20 @@ const DokumenKhusus = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
+        {!token && (
+          <Alert
+            severity="error"
+            variant="filled"
+            sx={{
+              position: "absolute",
+              top: "3%",
+              left: "37%"
+            }}
+          >
+            <AlertTitle>Error</AlertTitle>
+            You do not have access, please log in again !
+          </Alert>
+        )}
         <ContentBox>
           <Card sx={{ width: "100%" }}>
             <CardContent style={{ display: "flex", flexDirection: "row", gap: "0.2rem" }}>
