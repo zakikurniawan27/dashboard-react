@@ -24,7 +24,7 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
-export default function PaginationTable({ children, data, token, stateData }) {
+export default function PaginationTable({ children, data, token, stateData, handleDelete }) {
   const [statePage, setStatePage] = useState({
     page: 0,
     rowsPerPage: 10,
@@ -105,19 +105,27 @@ export default function PaginationTable({ children, data, token, stateData }) {
                 statePage.page * statePage.rowsPerPage + statePage.rowsPerPage
               )
               .map((item, index) => (
-                <TableRow
-                  key={index}
-                  onClick={() => handleOpenPdf(item.id, token)}
-                  sx={{ cursor: "pointer" }}
-                >
-                  <TableCell align="center">{nomor(index)}</TableCell>
-                  <TableCell align="center">{item.jenis_dokumen}</TableCell>
-                  <TableCell align="center">{item.no_dokumen}</TableCell>
-                  <TableCell align="center">{parseInt(item.tanggal_terbit)}</TableCell>
-                  <TableCell align="center">{item.nama_dokumen}</TableCell>
-                  <TableCell align="center">{item.tanggal_terbit}</TableCell>
+                <TableRow key={index} sx={{ cursor: "pointer" }}>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {nomor(index)}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {item.jenis_dokumen}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {item.no_dokumen}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {parseInt(item.tanggal_terbit)}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {item.nama_dokumen}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {item.tanggal_terbit}
+                  </TableCell>
                   <TableCell align="center">
-                    <IconButton>
+                    <IconButton onClick={() => handleDelete(item.id)}>
                       <Icon color="error">delete</Icon>
                     </IconButton>
                   </TableCell>

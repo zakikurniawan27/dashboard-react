@@ -1,8 +1,18 @@
 import { Box } from "@mui/material";
-
+import SnackbarContent from "../SnackbarContent";
 import Modal from "@mui/material/Modal";
 
-const ModalContent = ({ open, children }) => {
+const ModalContent = ({
+  open,
+  success,
+  failed,
+  children,
+  openSnackBar,
+  handleCloseSnackBarSucces,
+  handleCloseSnackBarfailed,
+  titleSnackBarSuccess,
+  titleSnackBarFailed
+}) => {
   return (
     <>
       <Modal
@@ -17,7 +27,7 @@ const ModalContent = ({ open, children }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 600,
-            height: 570,
+            maxHeight: "100%",
             bgcolor: "background.paper",
             borderRadius: "5px",
             boxShadow: 24,
@@ -28,6 +38,24 @@ const ModalContent = ({ open, children }) => {
           {children}
         </Box>
       </Modal>
+      <SnackbarContent
+        vertical={openSnackBar.vertical}
+        horizontal={openSnackBar.horizontal}
+        open={success}
+        severity={"success"}
+        handleCloseSnackBar={handleCloseSnackBarSucces}
+      >
+        {titleSnackBarSuccess}
+      </SnackbarContent>
+      <SnackbarContent
+        vertical={openSnackBar.vertical}
+        horizontal={openSnackBar.horizontal}
+        open={failed}
+        severity={"error"}
+        handleCloseSnackBar={handleCloseSnackBarfailed}
+      >
+        {titleSnackBarFailed}
+      </SnackbarContent>
     </>
   );
 };

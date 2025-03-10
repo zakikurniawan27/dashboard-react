@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalContent from "./ModalContent";
-import SnackbarContent from "../SnackbarContent";
 import { Button, CircularProgress, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
@@ -28,24 +27,21 @@ const ModalUploadDokumen = ({
   open,
   data,
   token,
+  handleClose,
   openSnackBar,
-  setOpenSnackBar,
   handleChangeOption,
   handleDateChange,
   handleNoDokumen,
   handleNamaDokumen,
   handleFileDokumen,
-  handleSubmit
+  handleSubmit,
+  titleSnackBarSuccess,
+  titleSnackBarFailed,
+  handleCloseSnackBarSuccesDocument,
+  handleCloseSnackBarfailedDocument
 }) => {
   //state jenis dokumen
   const [jenisDokumen, setJenisDokumen] = useState("");
-
-  //function to handle close modal
-  const handleClose = () => setOpen(false);
-
-  //function to handle close snackbar
-  const handleCloseSnackBarSucces = () => setOpenSnackBar({ ...openSnackBar, success: false });
-  const handleCloseSnackBarfailed = () => setOpenSnackBar({ ...openSnackBar, failed: false });
 
   //function handle get jenis dokumen
   const getJenisDokumenData = async () => {
@@ -62,7 +58,16 @@ const ModalUploadDokumen = ({
   }, []);
   return (
     <>
-      <ModalContent open={open}>
+      <ModalContent
+        open={open}
+        openSnackBar={openSnackBar}
+        success={openSnackBar.successDokumen}
+        failed={openSnackBar.faildeDokumen}
+        titleSnackBarSuccess={titleSnackBarSuccess}
+        titleSnackBarFailed={titleSnackBarFailed}
+        handleCloseSnackBarSucces={handleCloseSnackBarSuccesDocument}
+        handleCloseSnackBarfailed={handleCloseSnackBarfailedDocument}
+      >
         <h2 style={{ fontWeight: "bold" }}>Dokumen Khusus</h2>
         <ContentModal>
           <div style={{ marginBottom: "20px" }}>
@@ -150,24 +155,6 @@ const ModalUploadDokumen = ({
           )}
         </BoxButtonModal>
       </ModalContent>
-      <SnackbarContent
-        vertical={openSnackBar.vertical}
-        horizontal={openSnackBar.horizontal}
-        open={openSnackBar.success}
-        severity={"success"}
-        handleCloseSnackBar={handleCloseSnackBarSucces}
-      >
-        Dokumen Berhasil Diunggah !
-      </SnackbarContent>
-      <SnackbarContent
-        vertical={openSnackBar.vertical}
-        horizontal={openSnackBar.horizontal}
-        open={openSnackBar.failed}
-        severity={"error"}
-        handleCloseSnackBar={handleCloseSnackBarfailed}
-      >
-        Dokumen Gagal Diunggah !
-      </SnackbarContent>
     </>
   );
 };

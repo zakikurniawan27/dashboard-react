@@ -29,3 +29,12 @@ export const postDokumenKhusus = async (dataDoc, token) => {
   });
   return data;
 };
+
+export const deleteDokumenKhusus = async (token, id) => {
+  const data = await axios.delete(`http://192.168.10.167:8089/library/DeleteDokumenKhusus/${id}`, {
+    headers: {
+      Authorization: `Bearer  ${token}`
+    }
+  });
+  return data;
+};

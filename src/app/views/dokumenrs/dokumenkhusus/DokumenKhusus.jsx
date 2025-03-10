@@ -9,10 +9,12 @@ import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { Alert, AlertTitle, InputAdornment, TableCell } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import {
+  deleteDokumenKhusus,
   dokumenKhususService,
   postDokumenKhusus
 } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
+import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -41,6 +43,7 @@ const DokumenKhusus = () => {
 
   //state data dokumen
   const [stateData, setStateData] = useState({
+    id: "",
     isLoading: false,
     noDokumen: "",
     name: "",
@@ -51,8 +54,10 @@ const DokumenKhusus = () => {
 
   //state open snackbar
   const [openSnackBar, setOpenSnackBar] = useState({
-    success: false,
-    failed: false,
+    successDokumen: false,
+    successConfirm: false,
+    failedDokumen: false,
+    failedConfirm: false,
     vertical: "bottom",
     horizontal: "right"
   });
@@ -61,15 +66,45 @@ const DokumenKhusus = () => {
   const [dokumenKhusus, setDokumenKhusus] = useState("");
 
   //state open modal
-  const [open, setOpen] = useState(false);
+  const [stateOpen, setStateOpen] = useState({
+    openModalUploadDokumen: false,
+    openModalConfirm: false
+  });
 
   //state search
   const [search, setSearch] = useState("");
 
   //function to handle open modal
-  const handleOpen = () => setOpen(true);
+  const handleOpenModalDokumen = () => setStateOpen({ ...stateOpen, openModalUploadDokumen: true });
 
+  //function to handle close modal dokumen
+  const handleCloseModalDokumen = () =>
+    setStateOpen({ ...stateOpen, openModalUploadDokumen: false });
+
+  //function to handle open modal confirm
+  const handleOpenModalConfirm = (id) => {
+    setStateOpen({ ...stateOpen, openModalConfirm: true });
+    setStateData({ ...stateData, id: id });
+  };
+
+  //function to handle close modal confirm
+  const handleCloseModalConfirm = () => setStateOpen({ ...stateOpen, openModalConfirm: false });
+
+  //function to handle close snackbar document
+  const handleCloseSnackBarSuccesDocument = () =>
+    setOpenSnackBar({ ...openSnackBar, successDokumen: false });
+  const handleCloseSnackBarfailedDocument = () =>
+    setOpenSnackBar({ ...openSnackBar, failedDokumen: false });
+
+  //function to handle close snackbar confirm
+  const handleCloseSnackBarSuccesConfirm = () =>
+    setOpenSnackBar({ ...openSnackBar, successConfirm: false });
+  const handleCloseSnackBarfailedConfirm = () =>
+    setOpenSnackBar({ ...openSnackBar, failedConfirm: false });
+
+  //function to handle search
   const handleSearch = (e) => setSearch(e.target.value);
+
   //function to handle change date
   const handleDateChange = (date) => setStateData({ ...stateData, selectedDate: date });
 
@@ -137,22 +172,35 @@ const DokumenKhusus = () => {
   formData.append("nama_dokumen", stateData.name);
   formData.append("file_dokumen", stateData.file);
 
-  //function handle to post data dokumen khusus
+  //function to handle post data dokumen khusus
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setStateData({ ...stateData, isLoading: true });
       await postDokumenKhusus(formData, token);
-      setOpenSnackBar({ ...openSnackBar, success: true });
-      console.log("Fetching updated dokumen khusus...");
+      setOpenSnackBar({ ...openSnackBar, successDokumen: true });
       await getDokumenKhusus();
       setStateData({ ...stateData, isLoading: false });
-      setOpen(false);
+      handleCloseModalDokumen();
     } catch (error) {
       console.log(error);
       alert(error);
-      setOpen(false);
+      setStateOpen({ ...stateOpen, openModalUploadDokumen: false });
       setOpenSnackBar({ ...openSnackBar, failed: true });
+    }
+  };
+
+  //function to handle delete document
+  const handleDelete = async () => {
+    try {
+      setStateData({ ...stateData, isLoading: true });
+      await deleteDokumenKhusus(token, stateData.id);
+      setOpenSnackBar({ ...openSnackBar, successConfirm: true });
+      await getDokumenKhusus();
+      setStateData({ ...stateData, isLoading: false });
+      handleCloseModalConfirm();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -200,7 +248,7 @@ const DokumenKhusus = () => {
               <Button variant="outlined" color="ochre" onClick={searchDokumenKhusus}>
                 <SearchOutlinedIcon color="ochre" />
               </Button>
-              <Button variant="outlined" onClick={handleOpen}>
+              <Button variant="outlined" onClick={handleOpenModalDokumen}>
                 <ArticleOutlinedIcon />
               </Button>
             </CardContent>
@@ -212,6 +260,7 @@ const DokumenKhusus = () => {
               stateData={stateData}
               data={dokumenKhusus}
               token={token}
+              handleDelete={handleOpenModalConfirm}
             >
               <TableCell align="center">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>
@@ -224,22 +273,41 @@ const DokumenKhusus = () => {
           </Card>
           {/** End Table */}
         </ContentBox>
-        {/** Begin Modal */}
+        {/** Begin Modal Upload Dokumen */}
         <ModalUploadDokumen
-          open={open}
+          open={stateOpen.openModalUploadDokumen}
           data={stateData}
           token={token}
+          handleClose={handleCloseModalDokumen}
           openSnackBar={openSnackBar}
-          setOpen={setOpen}
-          setOpenSnackBar={setOpenSnackBar}
           handleChangeOption={handleChangeOption}
           handleDateChange={handleDateChange}
           handleFileDokumen={handleFileDokumen}
           handleNamaDokumen={handleNamaDokumen}
           handleNoDokumen={handleNoDokumen}
           handleSubmit={handleSubmit}
+          titleSnackBarSuccess={"Dokumen Berhasil Tersimpan !"}
+          titleSnackBarFailed={"Dokumen Gagal Tersimpan !"}
+          handleCloseSnackBarSuccesDocument={handleCloseSnackBarSuccesDocument}
+          handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
         />
-        {/** End Modal */}
+        {/** End Modal Upload Dokumen */}
+
+        {/** Begin Modal Confirm */}
+        <ModalConfirm
+          open={stateOpen.openModalConfirm}
+          handleClose={handleCloseModalConfirm}
+          openSnackBar={openSnackBar}
+          title={"Hapus Dokumen"}
+          titleButton={"Hapus"}
+          titleSnackBarSuccess={"Dokumen Berhasil Terhapus !"}
+          titleSnackBarFailed={"Dokumen Gagal Terhapus !"}
+          handleCloseSnackBarSuccesConfirm={handleCloseSnackBarSuccesConfirm}
+          handleCloseSnackBarfailedConfirm={handleCloseSnackBarfailedConfirm}
+          handleSubmit={handleDelete}
+          textContent={"apakah anda yakin ingin menghapus dokumen ini ?"}
+        />
+        {/** End Modal Confirm */}
       </ThemeProvider>
     </>
   );
