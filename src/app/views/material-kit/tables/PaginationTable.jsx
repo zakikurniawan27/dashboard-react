@@ -25,18 +25,20 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 export default function PaginationTable({ children, data, token, stateData }) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [isLoading, setIsLoading] = useState(false);
-  const nomor = (i) => page * rowsPerPage + i + 1;
+  const [statePage, setStatePage] = useState({
+    page: 0,
+    rowsPerPage: 10,
+    isLoading: false
+  });
+  const nomor = (i) => statePage.page * statePage.rowsPerPage + i + 1;
 
   const handleChangePage = (_, newPage) => {
-    setPage(newPage);
+    setStatePage({ ...statePage, page: newPage });
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    setStatePage({ ...statePage, rowsPerPage: +event.target.value });
+    setStatePage({ ...statePage, page: 0 });
   };
 
   //function handle download pdf
@@ -50,7 +52,7 @@ export default function PaginationTable({ children, data, token, stateData }) {
     const fullUrl = `${baseUrl}${filePath}`;
 
     try {
-      setIsLoading(true);
+      setStatePage({ ...statePage, isLoading: true });
       const response = await fetch(fullUrl, {
         method: "GET",
         headers: {
@@ -65,14 +67,14 @@ export default function PaginationTable({ children, data, token, stateData }) {
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
-      // Buka PDF di tab baru
+      // open pdf to new tab
       window.open(blobUrl, "_blank");
 
-      // Hapus blob URL setelah beberapa saat untuk menghemat memori
+      // delete blob URL after 10 second to save memory
       setTimeout(() => {
         window.URL.revokeObjectURL(blobUrl);
-      }, 10000); // 10 detik
-      setIsLoading(false);
+      }, 10000);
+      setStatePage({ ...statePage, isLoading: false });
     } catch (error) {
       console.error("Terjadi kesalahan saat membuka PDF:", error);
     }
@@ -98,7 +100,10 @@ export default function PaginationTable({ children, data, token, stateData }) {
         <TableBody>
           {data.data?.length > 0 ? (
             data.data
-              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              ?.slice(
+                statePage.page * statePage.rowsPerPage,
+                statePage.page * statePage.rowsPerPage + statePage.rowsPerPage
+              )
               .map((item, index) => (
                 <TableRow
                   key={index}
@@ -112,9 +117,6 @@ export default function PaginationTable({ children, data, token, stateData }) {
                   <TableCell align="center">{item.nama_dokumen}</TableCell>
                   <TableCell align="center">{item.tanggal_terbit}</TableCell>
                   <TableCell align="center">
-                    <IconButton>
-                      <Icon sx={{ color: "#E3D026" }}>edit</Icon>
-                    </IconButton>
                     <IconButton>
                       <Icon color="error">delete</Icon>
                     </IconButton>
@@ -139,9 +141,9 @@ export default function PaginationTable({ children, data, token, stateData }) {
 
       <TablePagination
         sx={{ px: 2 }}
-        page={page}
+        page={statePage.page}
         component="div"
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={statePage.rowsPerPage}
         count={data?.data?.length || 0}
         onPageChange={handleChangePage}
         rowsPerPageOptions={[10, 20]}
@@ -149,7 +151,7 @@ export default function PaginationTable({ children, data, token, stateData }) {
         nextIconButtonProps={{ "aria-label": "Next Page" }}
         backIconButtonProps={{ "aria-label": "Previous Page" }}
       />
-      {isLoading === true ? (
+      {statePage.isLoading === true ? (
         <Box
           sx={{
             position: "absolute",

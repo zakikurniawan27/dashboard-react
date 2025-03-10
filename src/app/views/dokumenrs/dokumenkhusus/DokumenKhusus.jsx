@@ -8,11 +8,11 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { Alert, AlertTitle, InputAdornment, TableCell } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
-import ModalContent from "app/components/ModalContent";
 import {
   dokumenKhususService,
   postDokumenKhusus
 } from "app/service/dokumenKhusus/dokumenKhusus.service";
+import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -89,6 +89,14 @@ const DokumenKhusus = () => {
     }
   };
 
+  //function to handle keypress Enter in keyboard on input search
+  const handleEnterSearch = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      searchDokumenKhusus();
+    }
+  };
+
   //function to get data dokumen khusus
   const getDokumenKhusus = async () => {
     try {
@@ -110,14 +118,6 @@ const DokumenKhusus = () => {
       setStateData({ ...stateData, isLoading: false });
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  //function to handle keypress Enter in keyboard on input search
-  const handleEnterSearch = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      searchDokumenKhusus();
     }
   };
 
@@ -225,7 +225,7 @@ const DokumenKhusus = () => {
           {/** End Table */}
         </ContentBox>
         {/** Begin Modal */}
-        <ModalContent
+        <ModalUploadDokumen
           open={open}
           data={stateData}
           token={token}
