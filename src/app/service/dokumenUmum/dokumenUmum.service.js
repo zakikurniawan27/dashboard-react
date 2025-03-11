@@ -21,6 +21,15 @@ export const getJenisDokumenUmumService = async (token) => {
   return data;
 };
 
+export const getPokja = async (token) => {
+  const data = await axios.get("http://192.168.10.167:8089/library/getPokjaReferensi", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return data;
+};
+
 export const postDokumenUmumService = async (token, docData) => {
   const data = await axios.post("http://192.168.10.167:8089/library/postDokumenUmum", docData, {
     headers: {

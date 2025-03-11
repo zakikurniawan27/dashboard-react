@@ -16,7 +16,8 @@ import { useState, useEffect } from "react";
 import {
   deleteDokumenUmumService,
   getDokumenUmumService,
-  getJenisDokumenUmumService
+  getJenisDokumenUmumService,
+  getPokja
 } from "app/service/dokumenUmum/dokumenUmum.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
@@ -57,10 +58,12 @@ const DokumenUmum = () => {
     name: "",
     file: "",
     selectedOption: "",
+    selectedPokja: "",
     selectedDate: date,
     dokumenUmum: "",
     search: "",
-    jenisDokumen: ""
+    jenisDokumen: "",
+    pokja: ""
   });
 
   //format date
@@ -177,6 +180,16 @@ const DokumenUmum = () => {
     }
   };
 
+  //function to get data pokja
+  const getPokjaData = async () => {
+    try {
+      const { data } = await getPokja(token);
+      setStateData((prev) => ({ ...prev, pokja: data }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //store and manage data entered by users through forms
   const formData = new FormData();
   formData.append("jenis_dokumen", stateData.selectedOption);
@@ -220,6 +233,7 @@ const DokumenUmum = () => {
   useEffect(() => {
     getDokumenUmum();
     getJenisDokumenData();
+    getPokjaData();
   }, []);
   return (
     <ThemeProvider theme={theme}>
@@ -323,6 +337,15 @@ const DokumenUmum = () => {
           />
         </div>
         <div style={{ marginBottom: "20px" }}>
+          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Pokja</p>
+          <SelectContent
+            title="Pilih Pokja"
+            option={stateData.pokja}
+            selectedOption={stateData.selectedPokja}
+            handleChange={handleChangeOption}
+          />
+        </div>
+        <div style={{ marginBottom: "20px" }}>
           <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Tanggal Terbit</p>
           <DatepickerContent
             selectedDate={stateData.selectedDate}
@@ -351,7 +374,7 @@ const DokumenUmum = () => {
           />
         </div>
       </ModalUploadDokumen>
-      \{/** End Modal Upload Dokumen */}
+      {/** End Modal Upload Dokumen */}
       {/** Begin Modal Confirm */}
       <ModalConfirm
         open={stateOpen.openModalConfirm}
