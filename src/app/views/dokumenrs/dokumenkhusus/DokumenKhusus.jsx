@@ -37,6 +37,7 @@ const theme = createTheme({
 });
 
 const DokumenKhusus = () => {
+  const urlDownload = "http://192.168.10.167:8089/library/getDownloadDokumenKhusus/";
   //get token from local storage
   const token = localStorage.getItem("accessToken");
   //state date
@@ -274,6 +275,7 @@ const DokumenKhusus = () => {
               data={dokumenKhusus}
               token={token}
               handleDelete={handleOpenModalConfirm}
+              urlDownload={urlDownload}
             >
               <TableCell align="center">No</TableCell>
               <TableCell align="center">Jenis Dokumen</TableCell>

@@ -24,7 +24,14 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
-export default function PaginationTable({ children, data, token, stateData, handleDelete }) {
+export default function PaginationTable({
+  children,
+  data,
+  token,
+  stateData,
+  handleDelete,
+  urlDownload
+}) {
   const [statePage, setStatePage] = useState({
     page: 0,
     rowsPerPage: 10,
@@ -48,7 +55,7 @@ export default function PaginationTable({ children, data, token, stateData, hand
       return;
     }
 
-    const baseUrl = "http://192.168.10.167:8089/library/getDownloadDokumenKhusus/";
+    const baseUrl = `${urlDownload}`;
     const fullUrl = `${baseUrl}${filePath}`;
 
     try {
