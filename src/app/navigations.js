@@ -21,7 +21,7 @@ const navigations = [
         iconText: "DK",
         path: "/dokumen-khusus"
       },
-      { name: "Dokumen Umum", iconText: "DU", path: "/session/404" }
+      { name: "Dokumen Umum", iconText: "DU", path: "/dokumen-umum" }
     ]
   },
   { label: "Component", type: "label" },

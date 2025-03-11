@@ -122,6 +122,9 @@ export default function PaginationTable({ children, data, token, stateData, hand
                     {item.nama_dokumen}
                   </TableCell>
                   <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
+                    {item.Pokja}
+                  </TableCell>
+                  <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
                     {item.tanggal_terbit}
                   </TableCell>
                   <TableCell align="center">
