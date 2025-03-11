@@ -1,8 +1,10 @@
 import ModalContent from "./ModalContent";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import SelectContent from "app/components/SelectContent";
+import DatepickerContent from "app/components/DatepickerContent";
 
 const BoxButtonModal = styled("div")(() => ({
   display: "flex",
@@ -23,9 +25,14 @@ const ModalUploadDokumen = ({
   open,
   data,
   title,
-  children,
   handleClose,
   openSnackBar,
+  handleChangeOption,
+  handleChangeOptionPokja,
+  handleDateChange,
+  handleNoDokumen,
+  handleNamaDokumen,
+  handleFileDokumen,
   handleSubmit,
   titleSnackBarSuccess,
   titleSnackBarFailed,
@@ -45,7 +52,83 @@ const ModalUploadDokumen = ({
         handleCloseSnackBarfailed={handleCloseSnackBarfailedDocument}
       >
         <h2 style={{ fontWeight: "bold" }}>{title}</h2>
-        <ContentModal>{children}</ContentModal>
+        <ContentModal>
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>No Dokumen</p>
+            <TextField
+              fullWidth
+              type="text"
+              onChange={handleNoDokumen}
+              id="fullWidth"
+              name="noDokumen"
+              placeholder="No Dokumen"
+              variant="outlined"
+              size="small"
+            />
+          </div>
+          {!data.dokumenUmum ? (
+            <div style={{ marginBottom: "20px" }}>
+              <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Jenis Dokumen</p>
+              <SelectContent
+                title="Pilih Jenis Dokumen"
+                option={data.jenisDokumenKhusus || []}
+                selectedOption={data.selectedOption}
+                handleChange={handleChangeOption}
+              />
+            </div>
+          ) : (
+            data.dokumenUmum && (
+              <>
+                <div style={{ marginBottom: "20px" }}>
+                  <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Jenis Dokumen</p>
+                  <SelectContent
+                    title="Pilih Jenis Dokumen"
+                    option={data.jenisDokumenUmum}
+                    selectedOption={data.selectedOption}
+                    handleChange={handleChangeOption}
+                  />
+                </div>
+                <div style={{ marginBottom: "20px" }}>
+                  <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Pokja</p>
+                  <SelectContent
+                    title="Pilih Pokja"
+                    option={data.pokja}
+                    selectedOption={data.selectedPokja}
+                    handleChange={handleChangeOptionPokja}
+                  />
+                </div>
+              </>
+            )
+          )}
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Tanggal Terbit</p>
+            <DatepickerContent
+              selectedDate={data.selectedDate}
+              handleDateChange={handleDateChange}
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Nama Dokumen</p>
+            <TextField
+              fullWidth
+              type="text"
+              multiline
+              rows={4}
+              placeholder="Nama Dokumen"
+              onChange={handleNamaDokumen}
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Upload File</p>
+            <TextField
+              fullWidth
+              type="file"
+              placeholder="Upload File"
+              size="small"
+              onChange={handleFileDokumen}
+            />
+          </div>
+        </ContentModal>
         <BoxButtonModal>
           <Button
             variant="outlined"

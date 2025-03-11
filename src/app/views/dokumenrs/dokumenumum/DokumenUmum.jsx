@@ -21,8 +21,6 @@ import {
 } from "app/service/dokumenUmum/dokumenUmum.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
-import SelectContent from "app/components/SelectContent";
-import DatepickerContent from "app/components/DatepickerContent";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -62,7 +60,7 @@ const DokumenUmum = () => {
     selectedDate: date,
     dokumenUmum: "",
     search: "",
-    jenisDokumen: "",
+    jenisDokumenUmum: "",
     pokja: ""
   });
 
@@ -124,6 +122,10 @@ const DokumenUmum = () => {
   //function to handle change option select
   const handleChangeOption = (e) => setStateData({ ...stateData, selectedOption: e.target.value });
 
+  //function to handle change option select
+  const handleChangeOptionPokja = (e) =>
+    setStateData({ ...stateData, selectedPokja: e.target.value });
+
   //function to handle no dokumen
   const handleNoDokumen = (e) => setStateData({ ...stateData, noDokumen: e.target.value });
 
@@ -174,7 +176,7 @@ const DokumenUmum = () => {
   const getJenisDokumenData = async () => {
     try {
       const { data } = await getJenisDokumenUmumService(token);
-      setStateData((prev) => ({ ...prev, jenisDokumen: data }));
+      setStateData((prev) => ({ ...prev, jenisDokumenUmum: data }));
     } catch (error) {
       console.log(error);
     }
@@ -307,73 +309,20 @@ const DokumenUmum = () => {
         data={stateData}
         title={"Dokumen Umum"}
         handleClose={handleCloseModalDokumen}
+        handleChangeOption={handleChangeOption}
+        handleChangeOptionPokja={handleChangeOptionPokja}
+        handleDateChange={handleDateChange}
+        handleNoDokumen={handleNoDokumen}
+        handleNamaDokumen={handleNamaDokumen}
+        handleFileDokumen={handleFileDokumen}
         openSnackBar={openSnackBar}
         handleSubmit={handleSubmit}
         titleSnackBarSuccess={"Dokumen Berhasil Tersimpan !"}
         titleSnackBarFailed={"Dokumen Gagal Tersimpan !"}
         handleCloseSnackBarSuccesDocument={handleCloseSnackBarSuccesDocument}
         handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
-      >
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>No Dokumen</p>
-          <TextField
-            fullWidth
-            type="text"
-            onChange={handleNoDokumen}
-            id="fullWidth"
-            name="noDokumen"
-            placeholder="No Dokumen"
-            variant="outlined"
-            size="small"
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Jenis Dokumen</p>
-          <SelectContent
-            title="Pilih Jenis Dokumen"
-            option={stateData.jenisDokumen}
-            selectedOption={stateData.selectedOption}
-            handleChange={handleChangeOption}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Pokja</p>
-          <SelectContent
-            title="Pilih Pokja"
-            option={stateData.pokja}
-            selectedOption={stateData.selectedPokja}
-            handleChange={handleChangeOption}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Tanggal Terbit</p>
-          <DatepickerContent
-            selectedDate={stateData.selectedDate}
-            handleDateChange={handleDateChange}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Nama Dokumen</p>
-          <TextField
-            fullWidth
-            type="text"
-            multiline
-            rows={4}
-            placeholder="Nama Dokumen"
-            onChange={handleNamaDokumen}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Upload File</p>
-          <TextField
-            fullWidth
-            type="file"
-            placeholder="Upload File"
-            size="small"
-            onChange={handleFileDokumen}
-          />
-        </div>
-      </ModalUploadDokumen>
+      />
+
       {/** End Modal Upload Dokumen */}
       {/** Begin Modal Confirm */}
       <ModalConfirm

@@ -16,8 +16,6 @@ import {
 } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
-import SelectContent from "app/components/SelectContent";
-import DatepickerContent from "app/components/DatepickerContent";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -53,7 +51,7 @@ const DokumenKhusus = () => {
     file: "",
     selectedOption: "",
     selectedDate: date,
-    jenisDokumen: ""
+    jenisDokumenKhusus: ""
   });
 
   //state open snackbar
@@ -152,7 +150,7 @@ const DokumenKhusus = () => {
   const getJenisDokumenData = async () => {
     try {
       const { data } = await getJenisDokumen(token);
-      setStateData((prev) => ({ ...prev, jenisDokumen: data }));
+      setStateData((prev) => ({ ...prev, jenisDokumenKhusus: data }));
     } catch (error) {
       console.log(error);
     }
@@ -295,63 +293,17 @@ const DokumenKhusus = () => {
           title={"Dokumen Khusus"}
           handleClose={handleCloseModalDokumen}
           openSnackBar={openSnackBar}
+          handleChangeOption={handleChangeOption}
+          handleDateChange={handleDateChange}
+          handleFileDokumen={handleFileDokumen}
+          handleNamaDokumen={handleNamaDokumen}
+          handleNoDokumen={handleNoDokumen}
           handleSubmit={handleSubmit}
           titleSnackBarSuccess={"Dokumen Berhasil Tersimpan !"}
           titleSnackBarFailed={"Dokumen Gagal Tersimpan !"}
           handleCloseSnackBarSuccesDocument={handleCloseSnackBarSuccesDocument}
           handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
-        >
-          <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>No Dokumen</p>
-            <TextField
-              fullWidth
-              type="text"
-              onChange={handleNoDokumen}
-              id="fullWidth"
-              name="noDokumen"
-              placeholder="No Dokumen"
-              variant="outlined"
-              size="small"
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Jenis Dokumen</p>
-            <SelectContent
-              title="Pilih Jenis Dokumen"
-              option={stateData.jenisDokumen}
-              selectedOption={stateData.selectedOption}
-              handleChange={handleChangeOption}
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Tanggal Terbit</p>
-            <DatepickerContent
-              selectedDate={stateData.selectedDate}
-              handleDateChange={handleDateChange}
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Nama Dokumen</p>
-            <TextField
-              fullWidth
-              type="text"
-              multiline
-              rows={4}
-              placeholder="Nama Dokumen"
-              onChange={handleNamaDokumen}
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontWeight: "initial", lineHeight: "1rem" }}>Upload File</p>
-            <TextField
-              fullWidth
-              type="file"
-              placeholder="Upload File"
-              size="small"
-              onChange={handleFileDokumen}
-            />
-          </div>
-        </ModalUploadDokumen>
+        />
         {/** End Modal Upload Dokumen */}
 
         {/** Begin Modal Confirm */}
