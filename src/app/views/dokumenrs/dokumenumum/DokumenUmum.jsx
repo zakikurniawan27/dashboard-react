@@ -17,7 +17,8 @@ import {
   deleteDokumenUmumService,
   getDokumenUmumService,
   getJenisDokumenUmumService,
-  getPokja
+  getPokja,
+  postDokumenUmumService
 } from "app/service/dokumenUmum/dokumenUmum.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
@@ -140,16 +141,18 @@ const DokumenUmum = () => {
   };
 
   //function to handle search
-  const handleSearch = (e) => setStateData({ ...stateData, search: e.targer.value });
+  const handleSearch = (e) => setStateData({ ...stateData, search: e.target.value });
 
   //function to get search document umum
   const searchDokumenUmum = async () => {
     try {
-      setStateData({ ...stateData, isLoading: true });
+      setStateData((prev) => ({ ...prev, isLoading: true }));
       const { data } = await getDokumenUmum(token, stateData.search);
+
       setStateData((prev) => ({ ...prev, dokumenUmum: data, isLoading: false }));
     } catch (error) {
-      console.log(error);
+      error;
+      setStateData((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -193,22 +196,23 @@ const DokumenUmum = () => {
   };
 
   //store and manage data entered by users through forms
-  const formData = new FormData();
-  formData.append("jenis_dokumen", stateData.selectedOption);
-  formData.append("no_dokumen", stateData.noDokumen);
-  formData.append("tanggal_terbit", todayFormatted);
-  formData.append("nama_dokumen", stateData.name);
-  formData.append("file_dokumen", stateData.file);
+  const dataForm = new FormData();
+  dataForm.append("jenis_dokumen", stateData.selectedOption);
+  dataForm.append("no_dokumen", stateData.noDokumen);
+  dataForm.append("tanggal_terbit", todayFormatted);
+  dataForm.append("nama_dokumen", stateData.name);
+  dataForm.append("pokja_id", stateData.selectedPokja);
+  dataForm.append("file_dokumen", stateData.file);
 
   //function to handle post data dokumen khusus
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setStateData({ ...stateData, isLoading: true });
-      await postDokumenKhusus(formData, token);
+      await postDokumenUmumService(token, dataForm);
       setOpenSnackBar({ ...openSnackBar, successDokumen: true });
-      await getDokumenKhusus();
-      setStateData({ ...stateData, isLoading: false });
+      await getDokumenUmum();
+      setStateData((prev) => ({ ...prev, isLoading: false }));
       handleCloseModalDokumen();
     } catch (error) {
       console.log(error);
@@ -225,7 +229,7 @@ const DokumenUmum = () => {
       await deleteDokumenUmumService(token, stateData.id);
       setOpenSnackBar({ ...openSnackBar, successConfirm: true });
       await getDokumenUmum();
-      setStateData({ ...stateData, isLoading: false });
+      setStateData((prev) => ({ ...prev, isLoading: false }));
       handleCloseModalConfirm();
     } catch (error) {
       console.log(error);
@@ -285,7 +289,7 @@ const DokumenUmum = () => {
         {/** Begin Table */}
         <Card>
           <PaginationTable
-            key={stateData.dokumenUmum.length}
+            key={JSON.stringify(stateData.dokumenUmum)}
             stateData={stateData}
             data={stateData.dokumenUmum}
             token={token}
