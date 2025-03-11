@@ -13,8 +13,12 @@ import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { useState, useEffect } from "react";
-import { getDokumenUmumService } from "app/service/dokumenUmum/dokumenUmum.service";
+import {
+  deleteDokumenUmumService,
+  getDokumenUmumService
+} from "app/service/dokumenUmum/dokumenUmum.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
+import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
 
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
@@ -86,11 +90,26 @@ const DokumenUmum = () => {
   const handleCloseModalDokumen = () =>
     setStateOpen({ ...stateOpen, openModalUploadDokumen: false });
 
+  //function to handle open modal confirm
+  const handleOpenModalConfirm = (id) => {
+    setStateOpen({ ...stateOpen, openModalConfirm: true });
+    setStateData({ ...stateData, id: id });
+  };
+
+  //function to handle close modal confirm
+  const handleCloseModalConfirm = () => setStateOpen({ ...stateOpen, openModalConfirm: false });
+
   //function to handle close snackbar document
   const handleCloseSnackBarSuccesDocument = () =>
     setOpenSnackBar({ ...openSnackBar, successDokumen: false });
   const handleCloseSnackBarfailedDocument = () =>
     setOpenSnackBar({ ...openSnackBar, failedDokumen: false });
+
+  //function to handle close snackbar confirm
+  const handleCloseSnackBarSuccesConfirm = () =>
+    setOpenSnackBar({ ...openSnackBar, successConfirm: false });
+  const handleCloseSnackBarfailedConfirm = () =>
+    setOpenSnackBar({ ...openSnackBar, failedConfirm: false });
 
   //function to handle change date
   const handleDateChange = (date) => setStateData({ ...stateData, selectedDate: date });
@@ -170,6 +189,20 @@ const DokumenUmum = () => {
     }
   };
 
+  //function to handle delete document
+  const handleDelete = async () => {
+    try {
+      setStateData({ ...stateData, isLoading: true });
+      await deleteDokumenUmumService(token, stateData.id);
+      setOpenSnackBar({ ...openSnackBar, successConfirm: true });
+      await getDokumenUmum();
+      setStateData({ ...stateData, isLoading: false });
+      handleCloseModalConfirm();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getDokumenUmum();
   }, []);
@@ -225,6 +258,7 @@ const DokumenUmum = () => {
             stateData={stateData}
             data={stateData.dokumenUmum}
             token={token}
+            handleDelete={handleOpenModalConfirm}
           >
             <TableCell align="center">No</TableCell>
             <TableCell align="center">Jenis Dokumen</TableCell>
@@ -257,6 +291,21 @@ const DokumenUmum = () => {
         handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
       />
       \{/** End Modal Upload Dokumen */}
+      {/** Begin Modal Confirm */}
+      <ModalConfirm
+        open={stateOpen.openModalConfirm}
+        handleClose={handleCloseModalConfirm}
+        openSnackBar={openSnackBar}
+        title={"Hapus Dokumen"}
+        titleButton={"Hapus"}
+        titleSnackBarSuccess={"Dokumen Berhasil Terhapus !"}
+        titleSnackBarFailed={"Dokumen Gagal Terhapus !"}
+        handleCloseSnackBarSuccesConfirm={handleCloseSnackBarSuccesConfirm}
+        handleCloseSnackBarfailedConfirm={handleCloseSnackBarfailedConfirm}
+        handleSubmit={handleDelete}
+        textContent={"apakah anda yakin ingin menghapus dokumen ini ?"}
+      />
+      {/** End Modal Confirm */}
     </ThemeProvider>
   );
 };
