@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 // GLOBAL CUSTOM COMPONENTS
 import Loading from "app/components/MatxLoading";
+import { getMeServices, loginServices } from "app/service/auth/auth.service";
 
 const initialState = {
   user: null,
@@ -67,15 +68,12 @@ export const AuthProvider = ({ children }) => {
 
   // function login
   const login = async (username, password) => {
-    const { data } = await axios.post("http://192.168.10.167:8089/api/login", {
-      username,
-      password
-    }); // excecute api login and get data
+    const { data } = await loginServices(username, password); // excecute api login and get data
     const { token } = data; // get data authentication from data
 
     setSession(token); // set token from authentication to setSession
 
-    const dataUser = await axios.get("http://192.168.10.167:8089/api/getpegawai"); // get data user from data
+    const dataUser = await getMeServices(token); // get data user from data
     const user = dataUser.data;
 
     dispatch({ type: "LOGIN", payload: { user } }); //send data user to reducer type login
