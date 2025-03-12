@@ -43,7 +43,7 @@ const theme = createTheme({
 });
 
 const DokumenUmum = () => {
-  const urlDownload = "http://192.168.10.167:8089/library/getDokumenUmum/download/";
+  const urlDownload = `${import.meta.env.VITE_API_URL}getDokumenUmum/download/`;
   //get token from local storage
   const token = localStorage.getItem("accessToken");
 

@@ -37,7 +37,7 @@ const theme = createTheme({
 });
 
 const DokumenKhusus = () => {
-  const urlDownload = "http://192.168.10.167:8089/library/getDownloadDokumenKhusus/";
+  const urlDownload = `${import.meta.env.VITE_API_URL}getDownloadDokumenKhusus/`;
   //get token from local storage
   const token = localStorage.getItem("accessToken");
   //state date

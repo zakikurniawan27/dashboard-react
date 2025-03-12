@@ -1,7 +1,8 @@
 import axios from "axios";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getDokumenUmumService = async (token, search) => {
-  const data = await axios.get("http://192.168.10.167:8089/library/getDokumenUmum", {
+  const data = await axios.get(`${BASE_URL}getDokumenUmum`, {
     headers: {
       Authorization: `Bearer  ${token}`
     },
@@ -13,7 +14,7 @@ export const getDokumenUmumService = async (token, search) => {
 };
 
 export const getJenisDokumenUmumService = async (token) => {
-  const data = await axios.get("http://192.168.10.167:8089/library/getDokumenUmumRef", {
+  const data = await axios.get(`${BASE_URL}getDokumenUmumRef`, {
     headers: {
       Authorization: `Bearer  ${token}`
     }
@@ -22,7 +23,7 @@ export const getJenisDokumenUmumService = async (token) => {
 };
 
 export const getPokja = async (token) => {
-  const data = await axios.get("http://192.168.10.167:8089/library/getPokjaReferensi", {
+  const data = await axios.get(`${BASE_URL}getPokjaReferensi`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -31,7 +32,7 @@ export const getPokja = async (token) => {
 };
 
 export const postDokumenUmumService = async (token, docData) => {
-  const data = await axios.post("http://192.168.10.167:8089/library/postDokumenUmum", docData, {
+  const data = await axios.post(`${BASE_URL}postDokumenUmum`, docData, {
     headers: {
       Authorization: `Bearer  ${token}`
     }
@@ -40,7 +41,7 @@ export const postDokumenUmumService = async (token, docData) => {
 };
 
 export const deleteDokumenUmumService = async (token, id) => {
-  const data = await axios.delete(`http://192.168.10.167:8089/library/deleteDokumenUmum/${id}`, {
+  const data = await axios.delete(`${BASE_URL}deleteDokumenUmum/${id}`, {
     headers: {
       Authorization: `Bearer  ${token}`
     }
