@@ -52,7 +52,9 @@ const DokumenKhusus = () => {
     file: "",
     selectedOption: "",
     selectedDate: date,
-    jenisDokumenKhusus: ""
+    jenisDokumenKhusus: "",
+    dokumenKhusus: "",
+    search: ""
   });
 
   //state open snackbar
@@ -65,17 +67,11 @@ const DokumenKhusus = () => {
     horizontal: "right"
   });
 
-  //state dokumen khusus
-  const [dokumenKhusus, setDokumenKhusus] = useState("");
-
   //state open modal
   const [stateOpen, setStateOpen] = useState({
     openModalUploadDokumen: false,
     openModalConfirm: false
   });
-
-  //state search
-  const [search, setSearch] = useState("");
 
   //function to handle open modal
   const handleOpenModalDokumen = () => setStateOpen({ ...stateOpen, openModalUploadDokumen: true });
@@ -106,7 +102,7 @@ const DokumenKhusus = () => {
     setOpenSnackBar({ ...openSnackBar, failedConfirm: false });
 
   //function to handle search
-  const handleSearch = (e) => setSearch(e.target.value);
+  const handleSearch = (e) => setStateData({ ...stateData, search: e.target.value });
 
   //function to handle change date
   const handleDateChange = (date) => setStateData({ ...stateData, selectedDate: date });
@@ -138,10 +134,9 @@ const DokumenKhusus = () => {
   //function to get data dokumen khusus
   const getDokumenKhusus = async () => {
     try {
-      setStateData({ ...stateData, isLoading: true });
-      const { data } = await dokumenKhususService(token, search);
-      setDokumenKhusus(data);
-      setStateData({ ...stateData, isLoading: false });
+      setStateData((prev) => ({ ...prev, isLoading: true }));
+      const { data } = await dokumenKhususService(token, stateData.search);
+      setStateData((prev) => ({ ...prev, dokumenKhusus: data, isLoading: false }));
     } catch (error) {
       console.log(error);
     }
@@ -160,10 +155,9 @@ const DokumenKhusus = () => {
   //function to search data dokumen khusus
   const searchDokumenKhusus = async () => {
     try {
-      setStateData({ ...stateData, isLoading: true });
-      const { data } = await dokumenKhususService(token, search);
-      setDokumenKhusus(data);
-      setStateData({ ...stateData, isLoading: false });
+      setStateData((prev) => ({ ...prev, isLoading: true }));
+      const { data } = await dokumenKhususService(token, stateData.search);
+      setStateData((prev) => ({ ...prev, dokumenKhusus: data, isLoading: false }));
     } catch (error) {
       console.log(error);
     }
@@ -270,9 +264,9 @@ const DokumenKhusus = () => {
           {/** Begin Table */}
           <Card>
             <PaginationTable
-              key={dokumenKhusus.length}
+              key={JSON.stringify(stateData.dokumenUmum)}
               stateData={stateData}
-              data={dokumenKhusus}
+              data={stateData.dokumenKhusus}
               token={token}
               handleDelete={handleOpenModalConfirm}
               urlDownload={urlDownload}
