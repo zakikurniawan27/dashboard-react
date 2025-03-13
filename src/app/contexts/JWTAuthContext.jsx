@@ -96,16 +96,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       try {
-        const accessToken = window.localStorage.getItem("accessToken"); // get token from local storage
-        //check token valid
+        const accessToken = window.localStorage.getItem("accessToken");
+
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await axios.get("http://192.168.10.167:8089/api/getpegawai"); //get data user login
-          const user = response.data;
+          const response = await getMeServices(accessToken);
 
           dispatch({
             type: "INIT",
-            payload: { isAuthenticated: true, user }
+            payload: { isAuthenticated: true, user: response.data }
           });
         } else {
           dispatch({
@@ -114,8 +113,6 @@ export const AuthProvider = ({ children }) => {
           });
         }
       } catch (err) {
-        console.log(err);
-
         dispatch({
           type: "INIT",
           payload: { isAuthenticated: false, user: null }
