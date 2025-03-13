@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
         //check token valid
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await axios.get("http://192.168.10.167:8089/api/getpegawai"); //get data user login
+          const response = await getMeServices(accessToken); //get data user login
           const user = response.data;
 
           dispatch({
