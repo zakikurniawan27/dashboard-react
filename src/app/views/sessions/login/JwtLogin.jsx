@@ -1,23 +1,23 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 import Card from "@mui/material/Card";
-import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
+// import Box from "@mui/material/Box";
+// import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import styled from "@mui/material/styles/styled";
-import useTheme from "@mui/material/styles/useTheme";
+// import useTheme from "@mui/material/styles/useTheme";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import useAuth from "app/hooks/useAuth";
-import { Paragraph } from "app/components/Typography";
+// import { Paragraph } from "app/components/Typography";
 
 // STYLED COMPONENTS
-const FlexBox = styled(Box)(() => ({
-  display: "flex"
-}));
+// const FlexBox = styled(Box)(() => ({
+//   display: "flex"
+// }));
 
 const ContentBox = styled("div")(() => ({
   height: "100%",
@@ -60,14 +60,12 @@ const initialValues = {
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(6, "Password must be 6 character length")
-    .required("Password is required!"),
-  username: Yup.string().required("Email is required!")
+  password: Yup.string().required("Password is required!"),
+  username: Yup.string().required("Username is required!")
 });
 
 export default function JwtLogin() {
-  const theme = useTheme();
+  // const theme = useTheme();
   const { login } = useAuth(); //get function login from JWTAuthContext by AuthContext in useAuth
   const navigate = useNavigate();
 
@@ -128,7 +126,7 @@ export default function JwtLogin() {
                       sx={{ mb: 1.5 }}
                     />
 
-                    <FlexBox justifyContent="space-between">
+                    {/* <FlexBox justifyContent="space-between">
                       <FlexBox gap={1}>
                         <Checkbox
                           size="small"
@@ -146,7 +144,7 @@ export default function JwtLogin() {
                       >
                         Forgot password?
                       </NavLink>
-                    </FlexBox>
+                    </FlexBox> */}
 
                     <LoadingButton
                       type="submit"
@@ -158,7 +156,7 @@ export default function JwtLogin() {
                       Login
                     </LoadingButton>
 
-                    <Paragraph>
+                    {/* <Paragraph>
                       Don't have an account?
                       <NavLink
                         to="/session/signup"
@@ -166,7 +164,7 @@ export default function JwtLogin() {
                       >
                         Register
                       </NavLink>
-                    </Paragraph>
+                    </Paragraph> */}
                   </form>
                 )}
               </Formik>
