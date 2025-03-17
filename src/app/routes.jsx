@@ -8,8 +8,7 @@ import Loadable from "./components/Loadable";
 import MatxLayout from "./components/MatxLayout/MatxLayout";
 import sessionRoutes from "./views/sessions/session-routes";
 import materialRoutes from "app/views/material-kit/MaterialRoutes";
-import DokumenKhusus from "./views/dokumenrs/dokumenkhusus/DokumenKhusus";
-import DokumenUmum from "./views/dokumenrs/dokumenumum/DokumenUmum";
+import DokumenRoute from "./views/dokumenrs/DokumenRoute";
 
 // E-CHART PAGE
 const AppEchart = Loadable(lazy(() => import("app/views/charts/echarts/AppEchart")));
@@ -31,8 +30,7 @@ const routes = [
       // e-chart route
       { path: "/charts/echarts", element: <AppEchart />, auth: authRoles.editor },
       // dokumen rs route
-      { path: "/dokumen-khusus", element: <DokumenKhusus /> },
-      { path: "/dokumen-umum", element: <DokumenUmum /> }
+      ...DokumenRoute
     ]
   },
 

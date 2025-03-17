@@ -3,10 +3,9 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
-import { Alert, AlertTitle, InputAdornment, TableCell } from "@mui/material";
+import { InputAdornment, TableCell } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import {
   deleteDokumenKhusus,
@@ -16,30 +15,10 @@ import {
 } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
+import LayoutDokumen from "../layoutDokumen";
 
-const ContentBox = styled("div")(({ theme }) => ({
-  margin: "2rem",
-  display: "flex",
-  flexDirection: "column",
-  gap: "2rem",
-  justifyContent: "center",
-  [theme.breakpoints.down("sm")]: { margin: "1rem" }
-}));
-
-const theme = createTheme({
-  palette: {
-    ochre: {
-      main: "#E3D026",
-      light: "#E9DB5D",
-      dark: "#A29415"
-    }
-  }
-});
-
-const DokumenKhusus = () => {
+const DokumenKhusus = ({ token }) => {
   const urlDownload = `${import.meta.env.VITE_API_URL}getDownloadDokumenKhusus/`;
-  //get token from local storage
-  const token = localStorage.getItem("accessToken");
   //state date
   const date = new Date();
 
@@ -217,107 +196,91 @@ const DokumenKhusus = () => {
   }, []);
   return (
     <>
-      <ThemeProvider theme={theme}>
-        {!token && (
-          <Alert
-            severity="error"
-            variant="filled"
-            sx={{
-              position: "absolute",
-              top: "3%",
-              left: "37%"
-            }}
+      <LayoutDokumen token={token}>
+        <Card sx={{ width: "100%" }}>
+          <CardContent style={{ display: "flex", flexDirection: "row", gap: "0.2rem" }}>
+            <TextField
+              fullWidth
+              onKeyDown={handleEnterSearch}
+              type="text"
+              name="search"
+              placeholder="Cari Dokumen"
+              onChange={handleSearch}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchOutlinedIcon />
+                    </InputAdornment>
+                  )
+                }
+              }}
+              size="small"
+            />
+            <Button variant="outlined" color="ochre" onClick={searchDokumenKhusus}>
+              <SearchOutlinedIcon color="ochre" />
+            </Button>
+            <Button variant="outlined" onClick={handleOpenModalDokumen}>
+              <ArticleOutlinedIcon />
+            </Button>
+          </CardContent>
+        </Card>
+        {/** Begin Table */}
+        <Card>
+          <PaginationTable
+            key={JSON.stringify(stateData.dokumenUmum)}
+            stateData={stateData}
+            data={stateData.dokumenKhusus}
+            token={token}
+            handleDelete={handleOpenModalConfirm}
+            urlDownload={urlDownload}
           >
-            <AlertTitle>Error</AlertTitle>
-            You do not have access, please log in again !
-          </Alert>
-        )}
-        <ContentBox>
-          <Card sx={{ width: "100%" }}>
-            <CardContent style={{ display: "flex", flexDirection: "row", gap: "0.2rem" }}>
-              <TextField
-                fullWidth
-                onKeyDown={handleEnterSearch}
-                type="text"
-                name="search"
-                placeholder="Cari Dokumen"
-                onChange={handleSearch}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchOutlinedIcon />
-                      </InputAdornment>
-                    )
-                  }
-                }}
-                size="small"
-              />
-              <Button variant="outlined" color="ochre" onClick={searchDokumenKhusus}>
-                <SearchOutlinedIcon color="ochre" />
-              </Button>
-              <Button variant="outlined" onClick={handleOpenModalDokumen}>
-                <ArticleOutlinedIcon />
-              </Button>
-            </CardContent>
-          </Card>
-          {/** Begin Table */}
-          <Card>
-            <PaginationTable
-              key={JSON.stringify(stateData.dokumenUmum)}
-              stateData={stateData}
-              data={stateData.dokumenKhusus}
-              token={token}
-              handleDelete={handleOpenModalConfirm}
-              urlDownload={urlDownload}
-            >
-              <TableCell align="center">No</TableCell>
-              <TableCell align="center">Jenis Dokumen</TableCell>
-              <TableCell align="center">No Dokumen</TableCell>
-              <TableCell align="center">Tahun</TableCell>
-              <TableCell align="center">Nama Dokumen</TableCell>
-              <TableCell align="center">Tanggal Terbit</TableCell>
-              <TableCell align="center">Actions</TableCell>
-            </PaginationTable>
-          </Card>
-          {/** End Table */}
-        </ContentBox>
-        {/** Begin Modal Upload Dokumen */}
-        <ModalUploadDokumen
-          open={stateOpen.openModalUploadDokumen}
-          data={stateData}
-          title={"Dokumen Khusus"}
-          handleClose={handleCloseModalDokumen}
-          openSnackBar={openSnackBar}
-          handleChangeOption={handleChangeOption}
-          handleDateChange={handleDateChange}
-          handleFileDokumen={handleFileDokumen}
-          handleNamaDokumen={handleNamaDokumen}
-          handleNoDokumen={handleNoDokumen}
-          handleSubmit={handleSubmit}
-          titleSnackBarSuccess={"Dokumen Berhasil Tersimpan !"}
-          titleSnackBarFailed={"Dokumen Gagal Tersimpan !"}
-          handleCloseSnackBarSuccesDocument={handleCloseSnackBarSuccesDocument}
-          handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
-        />
-        {/** End Modal Upload Dokumen */}
+            <TableCell align="center">No</TableCell>
+            <TableCell align="center">Jenis Dokumen</TableCell>
+            <TableCell align="center">No Dokumen</TableCell>
+            <TableCell align="center">Tahun</TableCell>
+            <TableCell align="center">Nama Dokumen</TableCell>
+            <TableCell align="center">Tanggal Terbit</TableCell>
+            <TableCell align="center">Actions</TableCell>
+          </PaginationTable>
+        </Card>
+        {/** End Table */}
+      </LayoutDokumen>
+      {/** Begin Modal Upload Dokumen */}
+      <ModalUploadDokumen
+        open={stateOpen.openModalUploadDokumen}
+        data={stateData}
+        title={"Dokumen Khusus"}
+        handleClose={handleCloseModalDokumen}
+        openSnackBar={openSnackBar}
+        handleChangeOption={handleChangeOption}
+        handleDateChange={handleDateChange}
+        handleFileDokumen={handleFileDokumen}
+        handleNamaDokumen={handleNamaDokumen}
+        handleNoDokumen={handleNoDokumen}
+        handleSubmit={handleSubmit}
+        titleSnackBarSuccess={"Dokumen Berhasil Tersimpan !"}
+        titleSnackBarFailed={"Dokumen Gagal Tersimpan !"}
+        handleCloseSnackBarSuccesDocument={handleCloseSnackBarSuccesDocument}
+        handleCloseSnackBarfailedDocument={handleCloseSnackBarfailedDocument}
+      />
+      {/** End Modal Upload Dokumen */}
 
-        {/** Begin Modal Confirm */}
-        <ModalConfirm
-          open={stateOpen.openModalConfirm}
-          handleClose={handleCloseModalConfirm}
-          openSnackBar={openSnackBar}
-          title={"Hapus Dokumen"}
-          titleButton={"Hapus"}
-          titleSnackBarSuccess={"Dokumen Berhasil Terhapus !"}
-          titleSnackBarFailed={"Dokumen Gagal Terhapus !"}
-          handleCloseSnackBarSuccesConfirm={handleCloseSnackBarSuccesConfirm}
-          handleCloseSnackBarfailedConfirm={handleCloseSnackBarfailedConfirm}
-          handleSubmit={handleDelete}
-          textContent={"apakah anda yakin ingin menghapus dokumen ini ?"}
-        />
-        {/** End Modal Confirm */}
-      </ThemeProvider>
+      {/** Begin Modal Confirm */}
+      <ModalConfirm
+        open={stateOpen.openModalConfirm}
+        handleClose={handleCloseModalConfirm}
+        openSnackBar={openSnackBar}
+        title={"Hapus Dokumen"}
+        titleButton={"Hapus"}
+        titleSnackBarSuccess={"Dokumen Berhasil Terhapus !"}
+        titleSnackBarFailed={"Dokumen Gagal Terhapus !"}
+        handleCloseSnackBarSuccesConfirm={handleCloseSnackBarSuccesConfirm}
+        handleCloseSnackBarfailedConfirm={handleCloseSnackBarfailedConfirm}
+        handleSubmit={handleDelete}
+        textContent={"apakah anda yakin ingin menghapus dokumen ini ?"}
+      />
+      {/** End Modal Confirm */}
     </>
   );
 };
