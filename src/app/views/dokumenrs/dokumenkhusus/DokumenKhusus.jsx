@@ -170,7 +170,7 @@ const DokumenKhusus = ({ token }) => {
       await postDokumenKhusus(formData, token);
       setOpenSnackBar({ ...openSnackBar, successDokumen: true });
       await getDokumenKhusus();
-      setStateData({ ...stateData, isLoading: false });
+      setStateData((prev) => ({ ...prev, isLoading: false }));
       handleCloseModalDokumen();
     } catch (error) {
       console.log(error);
