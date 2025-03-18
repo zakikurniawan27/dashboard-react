@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, InputAdornment, TableCell, TextField } from "@mui/material";
+import { Button, Card, CardContent, InputAdornment, TextField } from "@mui/material";
 import PaginationTable from "app/views/material-kit/tables/PaginationTable";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
@@ -13,9 +13,13 @@ import {
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
 import LayoutDokumen from "../layoutDokumen";
+import useAuth from "app/hooks/useAuth";
 
 const DokumenUmum = ({ token }) => {
+  const idStaff = import.meta.env.VITE_ID_JABATAN_STAFF;
   const urlDownload = `${import.meta.env.VITE_API_URL}getDokumenUmum/download/`;
+  //state user
+  const { user } = useAuth();
   //state date
   const date = new Date();
 
@@ -237,9 +241,11 @@ const DokumenUmum = ({ token }) => {
             <Button variant="outlined" color="ochre" onClick={searchDokumenUmum}>
               <SearchOutlinedIcon color="ochre" />
             </Button>
-            <Button variant="outlined" onClick={handleOpenModalDokumen}>
-              <ArticleOutlinedIcon />
-            </Button>
+            {user.jabatan !== idStaff && (
+              <Button variant="outlined" onClick={handleOpenModalDokumen}>
+                <ArticleOutlinedIcon />
+              </Button>
+            )}
           </CardContent>
         </Card>
         {/** Begin Table */}
@@ -248,19 +254,12 @@ const DokumenUmum = ({ token }) => {
             key={JSON.stringify(stateData.dokumenUmum)}
             stateData={stateData}
             data={stateData.dokumenUmum}
+            idStaff={idStaff}
             token={token}
+            user={user}
             handleDelete={handleOpenModalConfirm}
             urlDownload={urlDownload}
-          >
-            <TableCell align="center">No</TableCell>
-            <TableCell align="center">Jenis Dokumen</TableCell>
-            <TableCell align="center">No Dokumen</TableCell>
-            <TableCell align="center">Tahun</TableCell>
-            <TableCell align="center">Nama Dokumen</TableCell>
-            <TableCell align="center">Pokja</TableCell>
-            <TableCell align="center">Tanggal Terbit</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </PaginationTable>
+          />
         </Card>
         {/** End Table */}
       </LayoutDokumen>

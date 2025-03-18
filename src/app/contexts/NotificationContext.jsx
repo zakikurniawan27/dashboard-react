@@ -79,7 +79,8 @@ export const NotificationProvider = ({ children }) => {
         clearNotifications,
         createNotification,
         notifications: state.notifications
-      }}>
+      }}
+    >
       {children}
     </NotificationContext.Provider>
   );

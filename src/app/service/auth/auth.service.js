@@ -18,3 +18,12 @@ export const getMeServices = async (token) => {
   });
   return data;
 };
+
+export const getReferensiJabatanService = async (token) => {
+  const data = await axios.get(`${BASE_URL}getreferensijabatan`, {
+    headers: {
+      Authorization: `Bearer  ${token}`
+    }
+  });
+  return data;
+};

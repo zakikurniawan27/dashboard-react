@@ -25,12 +25,13 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 export default function PaginationTable({
-  children,
   data,
   token,
+  user,
   stateData,
   handleDelete,
-  urlDownload
+  urlDownload,
+  idStaff
 }) {
   const [statePage, setStatePage] = useState({
     page: 0,
@@ -102,7 +103,16 @@ export default function PaginationTable({
       )}
       <StyledTable>
         <TableHead>
-          <TableRow>{children}</TableRow>
+          <TableRow>
+            <TableCell align="center">No</TableCell>
+            <TableCell align="center">Jenis Dokumen</TableCell>
+            <TableCell align="center">No Dokumen</TableCell>
+            <TableCell align="center">Tahun</TableCell>
+            <TableCell align="center">Nama Dokumen</TableCell>
+            {stateData.dokumenUmum && <TableCell align="center">Pokja</TableCell>}
+            <TableCell align="center">Tanggal Terbit</TableCell>
+            {user.jabatan !== idStaff && <TableCell align="center">Actions</TableCell>}
+          </TableRow>
         </TableHead>
         <TableBody>
           {data.data?.length > 0 ? (
@@ -136,11 +146,13 @@ export default function PaginationTable({
                   <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
                     {item.tanggal_terbit}
                   </TableCell>
-                  <TableCell align="center">
-                    <IconButton onClick={() => handleDelete(item.id)}>
-                      <Icon color="error">delete</Icon>
-                    </IconButton>
-                  </TableCell>
+                  {user.jabatan !== idStaff && (
+                    <TableCell align="center">
+                      <IconButton onClick={() => handleDelete(item.id)}>
+                        <Icon color="error">delete</Icon>
+                      </IconButton>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
           ) : data.data?.length === 0 ? (
