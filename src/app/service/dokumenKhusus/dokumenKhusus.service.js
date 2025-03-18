@@ -23,6 +23,15 @@ export const getJenisDokumen = async (token) => {
   return data;
 };
 
+export const getJumlahDokumenKhususService = async (token) => {
+  const data = await axios.get(`${BASE_URL}getjumlahdokumenkhusus`, {
+    headers: {
+      Authorization: `Bearer  ${token}`
+    }
+  });
+  return data;
+};
+
 export const postDokumenKhusus = async (dataDoc, token) => {
   const data = await axios.post(`${BASE_URL}postDokumenKhusus`, dataDoc, {
     headers: {

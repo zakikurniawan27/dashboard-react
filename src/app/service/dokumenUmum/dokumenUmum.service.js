@@ -31,6 +31,15 @@ export const getPokja = async (token) => {
   return data;
 };
 
+export const getJumlahDokumenUmumService = async (token) => {
+  const data = await axios.get(`${BASE_URL}getjumlahdokumenumum`, {
+    headers: {
+      Authorization: `Bearer  ${token}`
+    }
+  });
+  return data;
+};
+
 export const postDokumenUmumService = async (token, docData) => {
   const data = await axios.post(`${BASE_URL}postDokumenUmum`, docData, {
     headers: {

@@ -1,10 +1,8 @@
 import Fab from "@mui/material/Fab";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid2";
-import { lighten, styled, useTheme } from "@mui/material/styles";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import StarOutline from "@mui/icons-material/StarOutline";
-import TrendingUp from "@mui/icons-material/TrendingUp";
+import { styled } from "@mui/material/styles";
+import ArticleIcon from "@mui/icons-material/Article";
 
 // STYLED COMPONENTS
 const ContentBox = styled("div")(() => ({
@@ -25,77 +23,31 @@ const H3 = styled("h3")(() => ({
   marginLeft: "12px"
 }));
 
-const H1 = styled("h1")(({ theme }) => ({
-  margin: 0,
-  flexGrow: 1,
-  color: theme.palette.text.secondary
+const H2 = styled("h2")(() => ({
+  marginLeft: 12,
+  flexGrow: 1
 }));
 
-const Span = styled("span")(() => ({
-  fontSize: "13px",
-  marginLeft: "4px"
-}));
-
-const IconBox = styled("div")(() => ({
-  width: 16,
-  height: 16,
-  color: "#fff",
-  display: "flex",
-  overflow: "hidden",
-  borderRadius: "300px ",
-  justifyContent: "center",
-  "& .icon": { fontSize: "14px" }
-}));
-
-export default function StatCards2() {
-  const { palette } = useTheme();
-  const bgError = lighten(palette.error.main, 0.85);
-
+export default function StatCards2({ dokumen }) {
   return (
-    <Grid container spacing={3} sx={{ mb: 3 }}>
-      <Grid size={{ md: 6, xs: 12 }}>
-        <Card elevation={3} sx={{ p: 2 }}>
-          <ContentBox>
-            <FabIcon size="medium" sx={{ background: "rgba(9, 182, 109, 0.15)" }}>
-              <TrendingUp color="success" />
-            </FabIcon>
+    <Grid container spacing={2} sx={{ mb: 3 }}>
+      {dokumen.data?.map((item, index) => (
+        <Grid size={{ md: 6, xs: 12 }} key={index}>
+          <Card elevation={3} sx={{ p: 2 }}>
+            <ContentBox>
+              <FabIcon size="medium" sx={{ background: "rgba(9, 116, 182, 0.15)" }}>
+                <ArticleIcon color="primary" />
+              </FabIcon>
 
-            <H3 color="#08ad6c">Active Users</H3>
-          </ContentBox>
+              <H2 color="#08ad6c">{item.jenis_dokumen}</H2>
+            </ContentBox>
 
-          <ContentBox sx={{ pt: 2 }}>
-            <H1>10.8k</H1>
-
-            <IconBox sx={{ backgroundColor: "success.main" }}>
-              <ExpandLess className="icon" />
-            </IconBox>
-
-            <Span color="#08ad6c">(+21%)</Span>
-          </ContentBox>
-        </Card>
-      </Grid>
-
-      <Grid size={{ md: 6, xs: 12 }}>
-        <Card elevation={3} sx={{ p: 2 }}>
-          <ContentBox>
-            <FabIcon size="medium" sx={{ backgroundColor: bgError, overflow: "hidden" }}>
-              <StarOutline color="error" />
-            </FabIcon>
-
-            <H3 color="error.main">Transactions</H3>
-          </ContentBox>
-
-          <ContentBox sx={{ pt: 2 }}>
-            <H1>$2.8M</H1>
-
-            <IconBox sx={{ backgroundColor: "error.main" }}>
-              <ExpandLess className="icon" />
-            </IconBox>
-
-            <Span color="error.main">(+21%)</Span>
-          </ContentBox>
-        </Card>
-      </Grid>
+            <ContentBox sx={{ pt: 2 }}>
+              <H3>Jumlah Dokumen = {item.total}</H3>
+            </ContentBox>
+          </Card>
+        </Grid>
+      ))}
     </Grid>
   );
 }
