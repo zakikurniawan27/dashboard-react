@@ -15,7 +15,7 @@ import {
 } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
-import LayoutDokumen from "../layoutDokumen";
+import LayoutDokumen from "../LayoutDokumen";
 import useAuth from "app/hooks/useAuth";
 
 const DokumenKhusus = ({ token }) => {
