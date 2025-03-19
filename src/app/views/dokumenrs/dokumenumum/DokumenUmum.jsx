@@ -241,11 +241,12 @@ const DokumenUmum = ({ token }) => {
             <Button variant="outlined" color="ochre" onClick={searchDokumenUmum}>
               <SearchOutlinedIcon color="ochre" />
             </Button>
-            {user.jabatan !== idStaff && (
-              <Button variant="outlined" onClick={handleOpenModalDokumen}>
-                <ArticleOutlinedIcon />
-              </Button>
-            )}
+            {user.jabatan !== null ||
+              (user.jabatan !== idStaff && (
+                <Button variant="outlined" onClick={handleOpenModalDokumen}>
+                  <ArticleOutlinedIcon />
+                </Button>
+              ))}
           </CardContent>
         </Card>
         {/** Begin Table */}

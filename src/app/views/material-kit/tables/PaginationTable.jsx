@@ -111,7 +111,8 @@ export default function PaginationTable({
             <TableCell align="center">Nama Dokumen</TableCell>
             {stateData.dokumenUmum && <TableCell align="center">Pokja</TableCell>}
             <TableCell align="center">Tanggal Terbit</TableCell>
-            {user.jabatan !== idStaff && <TableCell align="center">Actions</TableCell>}
+            {user.jabatan !== idStaff ||
+              (user.jabatan !== null && <TableCell align="center">Actions</TableCell>)}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -146,13 +147,14 @@ export default function PaginationTable({
                   <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
                     {item.tanggal_terbit}
                   </TableCell>
-                  {user.jabatan !== idStaff && (
-                    <TableCell align="center">
-                      <IconButton onClick={() => handleDelete(item.id)}>
-                        <Icon color="error">delete</Icon>
-                      </IconButton>
-                    </TableCell>
-                  )}
+                  {user.jabatan !== idStaff ||
+                    (user.jabatan !== null && (
+                      <TableCell align="center">
+                        <IconButton onClick={() => handleDelete(item.id)}>
+                          <Icon color="error">delete</Icon>
+                        </IconButton>
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))
           ) : data.data?.length === 0 ? (

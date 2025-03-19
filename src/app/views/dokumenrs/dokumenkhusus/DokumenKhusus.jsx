@@ -224,11 +224,12 @@ const DokumenKhusus = ({ token }) => {
             <Button variant="outlined" color="ochre" onClick={searchDokumenKhusus}>
               <SearchOutlinedIcon color="ochre" />
             </Button>
-            {user.jabatan !== idStaff && (
-              <Button variant="outlined" onClick={handleOpenModalDokumen}>
-                <ArticleOutlinedIcon />
-              </Button>
-            )}
+            {user.jabatan !== idStaff ||
+              (user.jabatan !== null && (
+                <Button variant="outlined" onClick={handleOpenModalDokumen}>
+                  <ArticleOutlinedIcon />
+                </Button>
+              ))}
           </CardContent>
         </Card>
         {/** Begin Table */}
