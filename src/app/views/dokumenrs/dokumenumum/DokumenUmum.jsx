@@ -12,7 +12,7 @@ import {
 } from "app/service/dokumenUmum/dokumenUmum.service";
 import ModalUploadDokumen from "app/components/ModalLayout/ModalUploadDokumen";
 import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
-import LayoutDokumen from "../layoutDokumen";
+import LayoutDokumen from "../LayoutDokumen";
 import useAuth from "app/hooks/useAuth";
 
 const DokumenUmum = ({ token }) => {
