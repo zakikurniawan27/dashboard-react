@@ -1,8 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { styled } from "@mui/material/styles";
-
-import RowCards from "./shared/RowCards";
 import StatCards2 from "./shared/StatCards2";
 import { getJumlahDokumenKhususService } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import { getJumlahDokumenUmumService } from "app/service/dokumenUmum/dokumenUmum.service";
@@ -58,9 +56,6 @@ export default function Dashboard() {
                 <StatCards2 dokumen={jumlahDokumen.umum} />
               </Link>
             )}
-
-            <H4>Ongoing Projects</H4>
-            <RowCards />
           </Grid>
         </Grid>
       </ContentBox>
