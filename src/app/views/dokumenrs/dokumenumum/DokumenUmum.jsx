@@ -15,11 +15,12 @@ import ModalConfirm from "app/components/ModalLayout/ModalConfirm";
 import LayoutDokumen from "../LayoutDokumen";
 import useAuth from "app/hooks/useAuth";
 
-const DokumenUmum = ({ token }) => {
+const DokumenUmum = () => {
   const idStaff = import.meta.env.VITE_ID_JABATAN_STAFF;
   const urlDownload = `${import.meta.env.VITE_API_URL}getDokumenUmum/download/`;
-  //state user
-  const { user } = useAuth();
+  //state user and token
+  const { user, token } = useAuth();
+
   //state date
   const date = new Date();
 
@@ -241,12 +242,11 @@ const DokumenUmum = ({ token }) => {
             <Button variant="outlined" color="ochre" onClick={searchDokumenUmum}>
               <SearchOutlinedIcon color="ochre" />
             </Button>
-            {user.jabatan !== null ||
-              (user.jabatan !== idStaff && (
-                <Button variant="outlined" onClick={handleOpenModalDokumen}>
-                  <ArticleOutlinedIcon />
-                </Button>
-              ))}
+            {user.jabatan !== idStaff && user.jabatan !== "" && (
+              <Button variant="outlined" onClick={handleOpenModalDokumen}>
+                <ArticleOutlinedIcon />
+              </Button>
+            )}
           </CardContent>
         </Card>
         {/** Begin Table */}
@@ -256,8 +256,6 @@ const DokumenUmum = ({ token }) => {
             stateData={stateData}
             data={stateData.dokumenUmum}
             idStaff={idStaff}
-            token={token}
-            user={user}
             handleDelete={handleOpenModalConfirm}
             urlDownload={urlDownload}
           />

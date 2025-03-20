@@ -12,6 +12,7 @@ import {
   TablePagination,
   CircularProgress
 } from "@mui/material";
+import useAuth from "app/hooks/useAuth";
 
 // STYLED COMPONENT
 const StyledTable = styled(Table)(() => ({
@@ -24,20 +25,14 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
-export default function PaginationTable({
-  data,
-  token,
-  user,
-  stateData,
-  handleDelete,
-  urlDownload,
-  idStaff
-}) {
+export default function PaginationTable({ data, stateData, handleDelete, urlDownload, idStaff }) {
   const [statePage, setStatePage] = useState({
     page: 0,
     rowsPerPage: 10,
     isLoading: false
   });
+
+  const { user, token } = useAuth();
   const nomor = (i) => statePage.page * statePage.rowsPerPage + i + 1;
 
   const handleChangePage = (_, newPage) => {
@@ -111,8 +106,9 @@ export default function PaginationTable({
             <TableCell align="center">Nama Dokumen</TableCell>
             {stateData.dokumenUmum && <TableCell align="center">Pokja</TableCell>}
             <TableCell align="center">Tanggal Terbit</TableCell>
-            {user.jabatan !== idStaff ||
-              (user.jabatan !== null && <TableCell align="center">Actions</TableCell>)}
+            {user.jabatan !== idStaff && user.jabatan !== "" && (
+              <TableCell align="center">Actions</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -147,14 +143,13 @@ export default function PaginationTable({
                   <TableCell align="center" onClick={() => handleOpenPdf(item.id, token)}>
                     {item.tanggal_terbit}
                   </TableCell>
-                  {user.jabatan !== idStaff ||
-                    (user.jabatan !== null && (
-                      <TableCell align="center">
-                        <IconButton onClick={() => handleDelete(item.id)}>
-                          <Icon color="error">delete</Icon>
-                        </IconButton>
-                      </TableCell>
-                    ))}
+                  {user.jabatan !== idStaff && user.jabatan !== "" && (
+                    <TableCell align="center">
+                      <IconButton onClick={() => handleDelete(item.id)}>
+                        <Icon color="error">delete</Icon>
+                      </IconButton>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
           ) : data.data?.length === 0 ? (
