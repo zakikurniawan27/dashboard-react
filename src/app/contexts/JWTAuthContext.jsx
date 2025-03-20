@@ -7,7 +7,6 @@ import { getMeServices, loginServices } from "app/service/auth/auth.service";
 
 const initialState = {
   user: null,
-  token: localStorage.getItem("accessToken"),
   isInitialized: false,
   isAuthenticated: false
 };

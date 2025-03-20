@@ -22,7 +22,9 @@ const DokumenKhusus = () => {
   const idStaff = import.meta.env.VITE_ID_JABATAN_STAFF;
   const urlDownload = `${import.meta.env.VITE_API_URL}getDownloadDokumenKhusus/`;
   //state user and token
-  const { user, token } = useAuth();
+  const { user } = useAuth();
+  // get token from local storage
+  const token = localStorage.getItem("accessToken");
   //state date
   const date = new Date();
 
