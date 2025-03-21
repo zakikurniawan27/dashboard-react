@@ -19,6 +19,7 @@ import useAuth from "app/hooks/useAuth";
 //   display: "flex"
 // }));
 
+// ContentBox Component
 const ContentBox = styled("div")(() => ({
   height: "100%",
   padding: "32px",
@@ -26,6 +27,7 @@ const ContentBox = styled("div")(() => ({
   background: "rgba(0, 0, 0, 0.01)"
 }));
 
+// StyledRoot Component
 const StyledRoot = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
@@ -84,13 +86,16 @@ export default function JwtLogin() {
       <Card className="card">
         <Grid container>
           <Grid size={{ sm: 6, xs: 12 }}>
+            {/** Begin Image */}
             <div className="img-wrapper">
               <img src="/assets/images/illustrations/dreamer.svg" width="100%" alt="" />
             </div>
+            {/** End Image */}
           </Grid>
 
           <Grid size={{ sm: 6, xs: 12 }}>
             <ContentBox>
+              {/** Begin Form */}
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -98,6 +103,7 @@ export default function JwtLogin() {
               >
                 {({ errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit }) => (
                   <form onSubmit={handleSubmit}>
+                    {/** Begin input username */}
                     <TextField
                       fullWidth
                       size="small"
@@ -111,7 +117,8 @@ export default function JwtLogin() {
                       error={Boolean(errors.username && touched.username)}
                       sx={{ mb: 3 }}
                     />
-
+                    {/** End input username */}
+                    {/** Begin input password */}
                     <TextField
                       fullWidth
                       size="small"
@@ -125,7 +132,7 @@ export default function JwtLogin() {
                       error={Boolean(errors.password && touched.password)}
                       sx={{ mb: 1.5 }}
                     />
-
+                    {/** End input password */}
                     {/* <FlexBox justifyContent="space-between">
                       <FlexBox gap={1}>
                         <Checkbox
@@ -145,7 +152,7 @@ export default function JwtLogin() {
                         Forgot password?
                       </NavLink>
                     </FlexBox> */}
-
+                    {/** Begin button with loading */}
                     <LoadingButton
                       type="submit"
                       color="primary"
@@ -155,6 +162,7 @@ export default function JwtLogin() {
                     >
                       Login
                     </LoadingButton>
+                    {/** End button with loading */}
 
                     {/* <Paragraph>
                       Don't have an account?
@@ -168,6 +176,7 @@ export default function JwtLogin() {
                   </form>
                 )}
               </Formik>
+              {/** End Form */}
             </ContentBox>
           </Grid>
         </Grid>

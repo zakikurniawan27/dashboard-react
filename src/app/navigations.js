@@ -1,3 +1,6 @@
+{
+  /**Content Side Nav */
+}
 const navigations = [
   { label: "DASHBOARD", type: "label" },
   { name: "Dashboard", path: "/dashboard/default", icon: "dashboard" },

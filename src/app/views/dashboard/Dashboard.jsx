@@ -21,12 +21,16 @@ const H4 = styled("h4")(({ theme }) => ({
 }));
 
 export default function Dashboard() {
+  // get token from local storage
   const token = localStorage.getItem("accessToken");
 
+  // state jumlah dokumen
   const [jumlahDokumen, setJumlahDokumen] = useState({
     khusus: "",
     umum: ""
   });
+
+  // function to get jumlah dokumen
   const getJumlahDokumen = async () => {
     try {
       const { data } = await getJumlahDokumenKhususService(token);
@@ -36,6 +40,8 @@ export default function Dashboard() {
       console.log(error);
     }
   };
+
+  // to run the function after render the component
   useEffect(() => {
     getJumlahDokumen();
   }, []);
@@ -45,17 +51,21 @@ export default function Dashboard() {
         <Grid container spacing={3}>
           <Grid size={{ md: 12, xs: 12 }}>
             <H4>Dokumen Khusus</H4>
+            {/**Begin the Card Jumlah Dokumen Khusus */}
             {jumlahDokumen.khusus && (
               <Link to={"/dokumen-khusus"}>
                 <StatCards2 dokumen={jumlahDokumen.khusus} />
               </Link>
             )}
+            {/**End the Card Jumlah Dokumen Khusus */}
             <H4>Dokumen Umum</H4>
+            {/**Begin the Card Jumlah Dokumen Umum */}
             {jumlahDokumen.umum && (
               <Link to={"/dokumen-umum"}>
                 <StatCards2 dokumen={jumlahDokumen.umum} />
               </Link>
             )}
+            {/**End the Card Jumlah Dokumen Umum */}
           </Grid>
         </Grid>
       </ContentBox>

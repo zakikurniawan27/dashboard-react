@@ -7,7 +7,7 @@ import { authRoles } from "./auth/authRoles";
 import Loadable from "./components/Loadable";
 import MatxLayout from "./components/MatxLayout/MatxLayout";
 import sessionRoutes from "./views/sessions/session-routes";
-import materialRoutes from "app/views/material-kit/MaterialRoutes";
+// import materialRoutes from "app/views/material-kit/MaterialRoutes";
 import DokumenRoute from "./views/dokumenrs/DokumenRoute";
 
 // E-CHART PAGE
@@ -17,6 +17,7 @@ const Dashboard = Loadable(lazy(() => import("app/views/dashboard/Dashboard")));
 
 const routes = [
   { path: "/", element: <Navigate to="dashboard/default" /> },
+  //route dashboard with auth guard
   {
     element: (
       <AuthGuard>
@@ -24,7 +25,7 @@ const routes = [
       </AuthGuard>
     ),
     children: [
-      ...materialRoutes,
+      // ...materialRoutes,
       // dashboard route
       { path: "/dashboard/default", element: <Dashboard />, auth: authRoles.admin },
       // e-chart route

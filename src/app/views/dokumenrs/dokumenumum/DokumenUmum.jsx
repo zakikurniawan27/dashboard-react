@@ -16,7 +16,9 @@ import LayoutDokumen from "../LayoutDokumen";
 import useAuth from "app/hooks/useAuth";
 
 const DokumenUmum = () => {
+  // import id staff at .env
   const idStaff = import.meta.env.VITE_ID_JABATAN_STAFF;
+  // import url from .env and add endpoint for download dokumen
   const urlDownload = `${import.meta.env.VITE_API_URL}getDokumenUmum/download/`;
   //state user and token
   const { user } = useAuth();
@@ -212,7 +214,7 @@ const DokumenUmum = () => {
       console.log(error);
     }
   };
-
+  // to run the function after render the component
   useEffect(() => {
     getDokumenUmum();
     getJenisDokumenData();
@@ -221,8 +223,10 @@ const DokumenUmum = () => {
   return (
     <>
       <LayoutDokumen token={token}>
+        {/** Begin card content search */}
         <Card sx={{ width: "100%" }}>
           <CardContent style={{ display: "flex", flexDirection: "row", gap: "0.2rem" }}>
+            {/** Begin input search */}
             <TextField
               fullWidth
               onKeyDown={handleEnterSearch}
@@ -241,16 +245,22 @@ const DokumenUmum = () => {
               }}
               size="small"
             />
+            {/** End input search */}
+            {/** Begin button click for search */}
             <Button variant="outlined" color="ochre" onClick={searchDokumenUmum}>
               <SearchOutlinedIcon color="ochre" />
             </Button>
+            {/** End button click for search */}
+            {/** Begin open modal upload dokumen */}
             {user.jabatan !== idStaff && user.jabatan !== "" && (
               <Button variant="outlined" onClick={handleOpenModalDokumen}>
                 <ArticleOutlinedIcon />
               </Button>
             )}
+            {/** End open modal upload dokumen */}
           </CardContent>
         </Card>
+        {/** End card content search */}
         {/** Begin Table */}
         <Card>
           <PaginationTable

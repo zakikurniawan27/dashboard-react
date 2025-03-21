@@ -21,6 +21,7 @@ const Layout1Root = styled("div")(({ theme }) => ({
   background: theme.palette.background.default
 }));
 
+//ContentBox Component
 const ContentBox = styled("div")(() => ({
   height: "100%",
   display: "flex",
@@ -30,6 +31,7 @@ const ContentBox = styled("div")(() => ({
   justifyContent: "space-between"
 }));
 
+// StyledScrollBar Component
 const StyledScrollBar = styled(Scrollbar)(() => ({
   height: "100%",
   position: "relative",
@@ -38,6 +40,7 @@ const StyledScrollBar = styled(Scrollbar)(() => ({
   flexDirection: "column"
 }));
 
+// LayoutContainer Component
 const LayoutContainer = styled("div", {
   shouldForwardProp: (prop) => prop !== "open" && prop !== "width"
 })(({ width, open }) => ({
@@ -61,6 +64,7 @@ const Layout1 = () => {
     leftSidebar: { mode: sidenavMode, show: showSidenav }
   } = layout1Settings;
 
+  // mode sidenav
   const getSidenavWidth = () => {
     switch (sidenavMode) {
       case "full":

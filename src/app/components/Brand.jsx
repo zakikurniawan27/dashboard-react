@@ -27,7 +27,8 @@ export default function Brand({ children }) {
   return (
     <BrandRoot>
       <Box display="flex" alignItems="center">
-        <MatxLogo />
+        <MatxLogo /> {/** Logo in side nav */}
+        {/** Title in side nav */}
         <StyledSpan mode={mode} className="sidenavHoverShow">
           DAYAKU RAJA
         </StyledSpan>

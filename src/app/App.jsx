@@ -11,7 +11,7 @@ import routes from "./routes";
 import "../__api__";
 
 export default function App() {
-  const content = useRoutes(routes);
+  const content = useRoutes(routes); // for route to file routes
 
   return (
     <SettingsProvider>

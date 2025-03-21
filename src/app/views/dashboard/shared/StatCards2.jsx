@@ -31,6 +31,7 @@ const H2 = styled("h2")(() => ({
 export default function StatCards2({ dokumen }) {
   return (
     <Grid container spacing={2} sx={{ mb: 3 }}>
+      {/** mapping data dokumen with card */}
       {dokumen.data?.map((item, index) => (
         <Grid size={{ md: 6, xs: 12 }} key={index}>
           <Card elevation={3} sx={{ p: 2 }}>

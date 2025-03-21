@@ -1,6 +1,7 @@
 import { Alert, AlertTitle } from "@mui/material";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 
+// ContentBox Component
 const ContentBox = styled("div")(({ theme }) => ({
   margin: "2rem",
   display: "flex",
@@ -10,6 +11,7 @@ const ContentBox = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("sm")]: { margin: "1rem" }
 }));
 
+// theme
 const theme = createTheme({
   palette: {
     ochre: {
@@ -23,6 +25,7 @@ const theme = createTheme({
 const LayoutDokumen = ({ children, token }) => {
   return (
     <ThemeProvider theme={theme}>
+      {/** if token not found in local storage will bring up alert */}
       {!token && (
         <Alert
           severity="error"
@@ -37,6 +40,7 @@ const LayoutDokumen = ({ children, token }) => {
           You do not have access, please log in again !
         </Alert>
       )}
+      {/** Content of ContentBox from props children */}
       <ContentBox>{children}</ContentBox>
     </ThemeProvider>
   );

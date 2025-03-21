@@ -45,6 +45,7 @@ export default function Sidenav({ children }) {
     <Fragment>
       <StyledScrollBar options={{ suppressScrollX: true }}>
         {children}
+        {/** Content side nav in props navigations */}
         <MatxVerticalNav items={navigations} />
       </StyledScrollBar>
 

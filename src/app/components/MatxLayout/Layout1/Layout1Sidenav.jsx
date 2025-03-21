@@ -69,7 +69,10 @@ const Layout1Sidenav = () => {
 
   return (
     <SidebarNavRoot image={bgImgURL} width={getSidenavWidth()}>
+      {" "}
+      {/** Background image */}
       <NavListBox>
+        {/** Content Logo and Title sidenav */}
         <Brand>
           <Switch
             size="small"
@@ -79,6 +82,7 @@ const Layout1Sidenav = () => {
             sx={{ [theme.breakpoints.down("md")]: { display: "none" } }}
           />
         </Brand>
+        {/** Content Sidenav */}
         <Sidenav />
       </NavListBox>
     </SidebarNavRoot>
