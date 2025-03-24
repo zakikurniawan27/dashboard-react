@@ -5,6 +5,7 @@ import StatCards2 from "./shared/StatCards2";
 import { getJumlahDokumenKhususService } from "app/service/dokumenKhusus/dokumenKhusus.service";
 import { getJumlahDokumenUmumService } from "app/service/dokumenUmum/dokumenUmum.service";
 import { Link } from "react-router-dom";
+import Loading from "app/components/MatxLoading";
 
 // STYLED COMPONENTS
 const ContentBox = styled("div")(({ theme }) => ({
@@ -26,16 +27,23 @@ export default function Dashboard() {
 
   // state jumlah dokumen
   const [jumlahDokumen, setJumlahDokumen] = useState({
-    khusus: "",
-    umum: ""
+    isLoading: [],
+    khusus: [],
+    umum: []
   });
 
   // function to get jumlah dokumen
   const getJumlahDokumen = async () => {
     try {
+      setJumlahDokumen((prev) => ({ ...prev, isLoading: true }));
       const { data } = await getJumlahDokumenKhususService(token);
       const response = await getJumlahDokumenUmumService(token);
-      setJumlahDokumen({ ...jumlahDokumen, khusus: data, umum: response.data });
+      setJumlahDokumen((prev) => ({
+        ...prev,
+        khusus: data,
+        umum: response.data,
+        isLoading: false
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -68,6 +76,9 @@ export default function Dashboard() {
             {/**End the Card Jumlah Dokumen Umum */}
           </Grid>
         </Grid>
+        {/** Begin Loading */}
+        {jumlahDokumen.isLoading === true && <Loading />}
+        {/** End Loading */}
       </ContentBox>
     </Fragment>
   );

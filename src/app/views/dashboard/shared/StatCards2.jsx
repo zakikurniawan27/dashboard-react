@@ -32,23 +32,43 @@ export default function StatCards2({ dokumen }) {
   return (
     <Grid container spacing={2} sx={{ mb: 3 }}>
       {/** mapping data dokumen with card */}
-      {dokumen.data?.map((item, index) => (
-        <Grid size={{ md: 6, xs: 12 }} key={index}>
+      {dokumen.data?.length != 0 ? (
+        dokumen.data?.map((item, index) => (
+          <Grid size={{ md: 6, xs: 12 }} key={index}>
+            <Card elevation={3} sx={{ p: 2 }}>
+              <ContentBox>
+                <FabIcon size="medium" sx={{ background: "rgba(9, 116, 182, 0.15)" }}>
+                  <ArticleIcon color="primary" />
+                </FabIcon>
+
+                <H2 color="#08ad6c">{item.jenis_dokumen}</H2>
+              </ContentBox>
+
+              <ContentBox sx={{ pt: 2 }}>
+                <H3>Jumlah Dokumen = {item.total}</H3>
+              </ContentBox>
+            </Card>
+          </Grid>
+        ))
+      ) : dokumen.data?.length == 0 ? (
+        <Grid size={{ md: 6, xs: 12 }}>
           <Card elevation={3} sx={{ p: 2 }}>
             <ContentBox>
               <FabIcon size="medium" sx={{ background: "rgba(9, 116, 182, 0.15)" }}>
                 <ArticleIcon color="primary" />
               </FabIcon>
 
-              <H2 color="#08ad6c">{item.jenis_dokumen}</H2>
+              <H2 color="#08ad6c">Dokumen</H2>
             </ContentBox>
 
             <ContentBox sx={{ pt: 2 }}>
-              <H3>Jumlah Dokumen = {item.total}</H3>
+              <H3>Jumlah Dokumen = 0</H3>
             </ContentBox>
           </Card>
         </Grid>
-      ))}
+      ) : (
+        <></>
+      )}
     </Grid>
   );
 }
