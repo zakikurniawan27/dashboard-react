@@ -22,8 +22,8 @@ export default function Loading() {
   return (
     <StyledLoading>
       <Box position="relative">
-        <img src="/assets/images/logo-circle.svg" alt="Logo" />
-        <CircularProgress className="circleProgress" />
+        <img src="/assets/images/logo-rs-dara-fullColor.svg" alt="Logo" />
+        <CircularProgress className="circleProgress" color="inherit" />
       </Box>
     </StyledLoading>
   );

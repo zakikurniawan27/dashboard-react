@@ -13,6 +13,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import useAuth from "app/hooks/useAuth";
+import Loading from "app/components/MatxLoading";
 
 // STYLED COMPONENT
 const StyledTable = styled(Table)(() => ({
@@ -86,15 +87,16 @@ export default function PaginationTable({ data, stateData, handleDelete, urlDown
   return (
     <Box width="100%" overflow="auto">
       {stateData.isLoading === true && (
-        <CircularProgress
-          size={70}
+        <Box
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)"
           }}
-        />
+        >
+          <Loading />
+        </Box>
       )}
       <StyledTable>
         <TableHead>
@@ -180,7 +182,7 @@ export default function PaginationTable({ data, stateData, handleDelete, urlDown
         nextIconButtonProps={{ "aria-label": "Next Page" }}
         backIconButtonProps={{ "aria-label": "Previous Page" }}
       />
-      {statePage.isLoading === true ? (
+      {statePage.isLoading === true && (
         <Box
           sx={{
             position: "absolute",
@@ -191,8 +193,6 @@ export default function PaginationTable({ data, stateData, handleDelete, urlDown
         >
           <CircularProgress size={"5rem"} />
         </Box>
-      ) : (
-        <></>
       )}
     </Box>
   );
