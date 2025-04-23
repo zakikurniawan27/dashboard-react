@@ -1,5 +1,5 @@
 import { Button, Card, CardContent, InputAdornment, TextField } from "@mui/material";
-import PaginationTable from "app/views/material-kit/tables/PaginationTable";
+import PaginationTable from "app/components/PaginationTable";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { useState, useEffect } from "react";

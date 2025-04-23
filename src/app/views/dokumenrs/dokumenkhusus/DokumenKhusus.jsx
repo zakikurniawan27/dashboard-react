@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { InputAdornment } from "@mui/material";
-import PaginationTable from "app/views/material-kit/tables/PaginationTable";
+import PaginationTable from "app/components/PaginationTable";
 import {
   deleteDokumenKhusus,
   dokumenKhususService,
