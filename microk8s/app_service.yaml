@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: library-app
+spec:
+  selector:
+    app: library-app
+  ports:
+    - protocol: TCP
+      port: 80          # Port yang akan digunakan oleh Service
+      targetPort: 80  # Port yang digunakan oleh Pod
+  type: LoadBalancer
+  LoadBalancerIp: 192.168.10.55

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: library-app
+  template:
+    metadata:
+      labels:
+        app: library-app
+    spec:
+      containers:
+      - name: library-app-container
+        image: localhost:32000/library-app:latest
+        ports:
+        - containerPort: 80
+        # Tambahkan konfigurasi volumeMounts
+        volumeMounts:
+          - name: env
+            mountPath: /app/.env
+            subPath: .env
+      # Tambahkan konfigurasi volumes
+      volumes:
+        - name: env
+          secret:
+            secretName: library-app-env
